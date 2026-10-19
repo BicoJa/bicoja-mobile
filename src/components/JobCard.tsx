@@ -10,24 +10,20 @@ export function JobCard({ job, onPress }: JobCardProps) {
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityLabel={`${job.title}, ${job.location}, diária de ${job.dailyRate} reais`}
+      accessibilityLabel={`${job.title}, ${job.location}, ${job.distance}`}
       onPress={() => onPress(job)}
       style={({ pressed }) => [styles.card, pressed && styles.pressed]}
     >
-      <Image source={{ uri: job.imageUrl }} style={styles.image} />
+      <Image
+        accessibilityLabel={`Foto de uma obra para a vaga de ${job.category}`}
+        source={{ uri: job.imageUrl }}
+        style={styles.image}
+      />
       <View style={styles.content}>
-        <View style={styles.metaRow}>
-          <Text style={styles.category}>{job.category}</Text>
-          <Text style={styles.postedAt}>{job.postedAt}</Text>
-        </View>
-        <Text style={styles.title}>{job.title}</Text>
-        <Text style={styles.contractor}>{job.contractor}</Text>
-        <Text style={styles.location}>{job.location} · {job.distance}</Text>
+        <Text style={styles.title}>{job.category}</Text>
         <View style={styles.footer}>
-          <Text style={styles.rate}>
-            R$ {job.dailyRate}<Text style={styles.perDay}> / dia</Text>
-          </Text>
-          <Text style={styles.more}>Ver detalhes ›</Text>
+          <Text style={styles.pin}>●</Text>
+          <Text style={styles.location}>{job.distance}</Text>
         </View>
       </View>
     </Pressable>
@@ -38,76 +34,43 @@ const styles = StyleSheet.create({
   card: {
     overflow: 'hidden',
     backgroundColor: '#FFFFFF',
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: '#F1E8E0',
-    marginBottom: 16,
+    borderRadius: 13,
+    borderWidth: 1.5,
+    borderColor: '#FF6410',
+    marginBottom: 10,
   },
   image: {
     width: '100%',
-    height: 142,
-    backgroundColor: '#F4E3D6',
+    height: 88,
+    backgroundColor: '#D7C4B2',
   },
   content: {
-    padding: 16,
-  },
-  metaRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 9,
-  },
-  category: {
-    color: '#B94A1C',
-    backgroundColor: '#FFF0E4',
-    borderRadius: 20,
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    fontSize: 12,
-    fontWeight: '700',
-  },
-  postedAt: {
-    color: '#8A786E',
-    fontSize: 12,
+    paddingHorizontal: 12,
+    paddingTop: 8,
+    paddingBottom: 9,
   },
   title: {
-    color: '#30241D',
-    fontSize: 18,
-    lineHeight: 24,
-    fontWeight: '700',
-  },
-  contractor: {
-    color: '#6F574A',
-    fontSize: 14,
-    marginTop: 4,
-  },
-  location: {
-    color: '#8A786E',
-    fontSize: 13,
-    marginTop: 9,
+    color: '#171717',
+    fontSize: 15,
+    lineHeight: 19,
+    fontWeight: '800',
+    textAlign: 'center',
   },
   footer: {
-    borderTopWidth: 1,
-    borderTopColor: '#F4EDE7',
-    marginTop: 14,
-    paddingTop: 13,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    marginTop: 5,
+    minHeight: 27,
+    gap: 5,
   },
-  rate: {
-    color: '#30241D',
-    fontSize: 18,
+  pin: {
+    color: '#FF6410',
+    fontSize: 14,
     fontWeight: '800',
   },
-  perDay: {
-    color: '#8A786E',
+  location: {
+    color: '#171717',
     fontSize: 12,
-    fontWeight: '500',
-  },
-  more: {
-    color: '#C64F1D',
-    fontSize: 13,
     fontWeight: '700',
   },
   pressed: {
