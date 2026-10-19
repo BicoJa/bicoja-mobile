@@ -13,10 +13,11 @@ export type Job = {
   contractor: string;
   location: string;
   distance: string;
-  dailyRate: number;
   schedule: string;
   description: string;
   benefits: string[];
+  requirements?: string[];
+  tools?: string[];
   postedAt: string;
   imageUrl: string;
 };

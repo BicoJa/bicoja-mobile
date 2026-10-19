@@ -9,16 +9,17 @@ declare const process: {
 const DEMO_JOBS: Job[] = [
   {
     id: 'alvenaria-01',
-    title: 'Pedreiro para alvenaria',
+    title: 'Pedreiro',
     category: 'Pedreiro',
     contractor: 'Construtora Horizonte',
     location: 'Manaíra, João Pessoa',
     distance: '1,2 km de você',
-    dailyRate: 250,
     schedule: 'Seg a sex, das 7h às 17h',
     description:
-      'Vaga para pedreiro com experiência em alvenaria. Obra organizada, início imediato e pagamento combinado por diária.',
-    benefits: ['Almoço no local', 'Ferramentas inclusas', 'Pagamento por diária'],
+      'Vaga para pedreiro com experiência em alvenaria. Obra organizada e início imediato. O valor será definido após visita e orçamento no local.',
+    benefits: ['Almoço no local'],
+    requirements: ['Experiência em alvenaria'],
+    tools: ['Ferramentas fornecidas na obra'],
     postedAt: 'Há 25 min',
     imageUrl:
       'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=900&q=80',
@@ -30,11 +31,12 @@ const DEMO_JOBS: Job[] = [
     contractor: 'Marcos Construções',
     location: 'Tambaú, João Pessoa',
     distance: '2,3 km de você',
-    dailyRate: 150,
     schedule: 'Seg a sex, das 8h às 17h',
     description:
-      'Serviço de instalação hidráulica em obra residencial. Procuramos profissional responsável e com experiência na função.',
-    benefits: ['Material no local', 'Pagamento por diária', 'Obra residencial'],
+      'Serviço de instalação hidráulica em obra residencial. Procuramos profissional responsável e com experiência na função. O preço será definido após visita e orçamento no local.',
+    benefits: [],
+    requirements: ['Experiência em instalação hidráulica'],
+    tools: ['Material fornecido no local'],
     postedAt: 'Há 1 h',
     imageUrl:
       'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=900&q=80',
@@ -46,11 +48,12 @@ const DEMO_JOBS: Job[] = [
     contractor: 'Equipe Nova Casa',
     location: 'Bancários, João Pessoa',
     distance: '1,9 km de você',
-    dailyRate: 200,
     schedule: 'Seg a sex, horário comercial',
     description:
-      'Serviço de instalação elétrica em apartamento. Buscamos profissional responsável, com experiência comprovada e disponibilidade para começar esta semana.',
-    benefits: ['Ferramentas inclusas', 'Pagamento por diária', 'Obra de pequeno porte'],
+      'Serviço de instalação elétrica em um empreendimento predial. Buscamos profissional responsável, com experiência comprovada e disponibilidade para começar esta semana. O preço será definido após visita e orçamento no local.',
+    benefits: [],
+    requirements: ['Experiência comprovada', 'Disponibilidade para começar esta semana'],
+    tools: ['Ferramentas inclusas na obra'],
     postedAt: 'Há 3 h',
     imageUrl:
       'https://images.unsplash.com/photo-1621905251918-48416bd8575a?auto=format&fit=crop&w=900&q=80',
@@ -78,11 +81,15 @@ const isJob = (value: unknown): value is Job => {
     typeof job.contractor === 'string' &&
     typeof job.location === 'string' &&
     typeof job.distance === 'string' &&
-    typeof job.dailyRate === 'number' &&
     typeof job.schedule === 'string' &&
     typeof job.description === 'string' &&
     Array.isArray(job.benefits) &&
     job.benefits.every((benefit) => typeof benefit === 'string') &&
+    (job.requirements === undefined ||
+      (Array.isArray(job.requirements) &&
+        job.requirements.every((requirement) => typeof requirement === 'string'))) &&
+    (job.tools === undefined ||
+      (Array.isArray(job.tools) && job.tools.every((tool) => typeof tool === 'string'))) &&
     typeof job.postedAt === 'string' &&
     typeof job.imageUrl === 'string'
   );

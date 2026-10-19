@@ -10,7 +10,7 @@ export function JobCard({ job, onPress }: JobCardProps) {
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityLabel={`${job.title}, ${job.location}, ${job.distance}`}
+      accessibilityLabel={`${job.title}, categoria ${job.category}, ${job.location}, ${job.distance}. Orçamento após visita.`}
       onPress={() => onPress(job)}
       style={({ pressed }) => [styles.card, pressed && styles.pressed]}
     >
@@ -20,10 +20,15 @@ export function JobCard({ job, onPress }: JobCardProps) {
         style={styles.image}
       />
       <View style={styles.content}>
-        <Text style={styles.title}>{job.category}</Text>
+        <View style={styles.categoryBadge}>
+          <Text style={styles.category}>{job.category}</Text>
+        </View>
+        <Text style={styles.title}>{job.title}</Text>
+        <Text style={styles.location}>{job.location}</Text>
         <View style={styles.footer}>
           <Text style={styles.pin}>●</Text>
-          <Text style={styles.location}>{job.distance}</Text>
+          <Text style={styles.distance}>{job.distance}</Text>
+          <Text style={styles.quote}>Orçamento após visita</Text>
         </View>
       </View>
     </Pressable>
@@ -46,32 +51,64 @@ const styles = StyleSheet.create({
   },
   content: {
     paddingHorizontal: 12,
-    paddingTop: 8,
-    paddingBottom: 9,
+    paddingTop: 9,
+    paddingBottom: 10,
+  },
+  categoryBadge: {
+    alignSelf: 'flex-start',
+    borderRadius: 12,
+    backgroundColor: '#FFF1E8',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+  },
+  category: {
+    color: '#D94D08',
+    fontSize: 10,
+    lineHeight: 14,
+    fontWeight: '800',
   },
   title: {
     color: '#171717',
-    fontSize: 15,
-    lineHeight: 19,
+    fontSize: 16,
+    lineHeight: 21,
     fontWeight: '800',
-    textAlign: 'center',
+    marginTop: 5,
+  },
+  location: {
+    color: '#5A5A5A',
+    fontSize: 12,
+    lineHeight: 17,
+    marginTop: 2,
   },
   footer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 5,
+    marginTop: 7,
     minHeight: 27,
-    gap: 5,
+    gap: 4,
   },
   pin: {
     color: '#FF6410',
     fontSize: 14,
     fontWeight: '800',
+    marginRight: 2,
   },
-  location: {
-    color: '#171717',
+  distance: {
+    color: '#333333',
     fontSize: 12,
     fontWeight: '700',
+    flex: 1,
+  },
+  quote: {
+    color: '#6A6A6A',
+    backgroundColor: '#F2F2F2',
+    borderRadius: 10,
+    paddingHorizontal: 7,
+    paddingVertical: 4,
+    fontSize: 9,
+    lineHeight: 12,
+    fontWeight: '700',
+    overflow: 'hidden',
   },
   pressed: {
     opacity: 0.88,
