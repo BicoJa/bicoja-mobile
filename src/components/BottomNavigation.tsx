@@ -19,8 +19,8 @@ export function BottomNavigation({
         onPress={onJobsPress}
         style={styles.item}
       >
-        <Text style={[styles.icon, active === 'jobs' && styles.activeText]}>▤</Text>
-        <Text style={[styles.label, active === 'jobs' && styles.activeText]}>Vagas</Text>
+        <Text style={[styles.icon, active === 'jobs' && styles.activeText]}>⌂</Text>
+        <Text style={[styles.label, active === 'jobs' && styles.activeText]}>Início</Text>
       </Pressable>
       <Pressable
         accessibilityRole="button"
@@ -38,30 +38,30 @@ export function BottomNavigation({
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#484848',
     borderTopWidth: 1,
-    borderTopColor: '#F1E8E0',
-    paddingTop: 10,
-    paddingBottom: 18,
+    borderTopColor: '#777777',
+    paddingTop: 6,
+    paddingBottom: 10,
   },
   item: {
     flex: 1,
-    minHeight: 48,
+    minHeight: 50,
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 2,
+    gap: 1,
   },
   icon: {
-    color: '#9A887D',
-    fontSize: 19,
+    color: '#BDBDBD',
+    fontSize: 20,
     fontWeight: '700',
   },
   label: {
-    color: '#8A786E',
-    fontSize: 12,
+    color: '#D0D0D0',
+    fontSize: 11,
     fontWeight: '600',
   },
   activeText: {
-    color: '#D95720',
+    color: '#FF6410',
   },
 });

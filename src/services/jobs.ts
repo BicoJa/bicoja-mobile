@@ -8,44 +8,44 @@ declare const process: {
 
 const DEMO_JOBS: Job[] = [
   {
-    id: 'obra-residencial-01',
-    title: 'Pedreiro para obra residencial',
+    id: 'alvenaria-01',
+    title: 'Pedreiro para alvenaria',
     category: 'Pedreiro',
     contractor: 'Construtora Horizonte',
-    location: 'Tambaú, João Pessoa',
-    distance: '2,4 km de você',
-    dailyRate: 180,
+    location: 'Manaíra, João Pessoa',
+    distance: '1,2 km de você',
+    dailyRate: 250,
     schedule: 'Seg a sex, das 7h às 17h',
     description:
-      'Precisamos de profissional com experiência em alvenaria e acabamento para reforma de casa. Início imediato, equipe organizada e pagamento semanal.',
-    benefits: ['Almoço no local', 'Ferramentas inclusas', 'Obra de médio porte'],
+      'Vaga para pedreiro com experiência em alvenaria. Obra organizada, início imediato e pagamento combinado por diária.',
+    benefits: ['Almoço no local', 'Ferramentas inclusas', 'Pagamento por diária'],
     postedAt: 'Há 25 min',
     imageUrl:
       'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=900&q=80',
   },
   {
-    id: 'obra-predial-02',
-    title: 'Ajudante para construção',
-    category: 'Ajudante',
+    id: 'instalacao-hidraulica-02',
+    title: 'Encanador',
+    category: 'Encanador',
     contractor: 'Marcos Construções',
-    location: 'Bancários, João Pessoa',
-    distance: '5,1 km de você',
-    dailyRate: 110,
-    schedule: 'Seg a sáb, das 7h às 16h',
+    location: 'Tambaú, João Pessoa',
+    distance: '2,3 km de você',
+    dailyRate: 150,
+    schedule: 'Seg a sex, das 8h às 17h',
     description:
-      'Vaga para auxiliar a equipe na organização do canteiro, preparação de materiais e apoio aos profissionais. Não é necessário ter experiência.',
-    benefits: ['Almoço no local', 'Pagamento semanal', 'Obra de grande porte'],
+      'Serviço de instalação hidráulica em obra residencial. Procuramos profissional responsável e com experiência na função.',
+    benefits: ['Material no local', 'Pagamento por diária', 'Obra residencial'],
     postedAt: 'Há 1 h',
     imageUrl:
       'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=900&q=80',
   },
   {
     id: 'instalacao-eletrica-03',
-    title: 'Eletricista para instalação',
+    title: 'Eletricista',
     category: 'Eletricista',
     contractor: 'Equipe Nova Casa',
-    location: 'Manaíra, João Pessoa',
-    distance: '3,8 km de você',
+    location: 'Bancários, João Pessoa',
+    distance: '1,9 km de você',
     dailyRate: 200,
     schedule: 'Seg a sex, horário comercial',
     description:
@@ -55,28 +55,14 @@ const DEMO_JOBS: Job[] = [
     imageUrl:
       'https://images.unsplash.com/photo-1621905251918-48416bd8575a?auto=format&fit=crop&w=900&q=80',
   },
-  {
-    id: 'pintura-comercial-04',
-    title: 'Pintor para espaço comercial',
-    category: 'Pintor',
-    contractor: 'Obras do Litoral',
-    location: 'Centro, João Pessoa',
-    distance: '6,2 km de você',
-    dailyRate: 160,
-    schedule: 'Seg a sex, das 8h às 17h',
-    description:
-      'Pintura interna de espaço comercial. Serviço com prazo de duas semanas, superfície preparada e materiais fornecidos pela contratante.',
-    benefits: ['Material incluso', 'Pagamento semanal', 'Obra de médio porte'],
-    postedAt: 'Ontem',
-    imageUrl:
-      'https://images.unsplash.com/photo-1581244277943-fe4a9c777189?auto=format&fit=crop&w=900&q=80',
-  },
 ];
 
 const isJobCategory = (value: unknown): value is JobCategory =>
   value === 'Pedreiro' ||
+  value === 'Encanador' ||
   value === 'Ajudante' ||
   value === 'Eletricista' ||
+  value === 'Gesseiro' ||
   value === 'Pintor';
 
 const isJob = (value: unknown): value is Job => {

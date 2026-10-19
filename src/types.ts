@@ -1,4 +1,10 @@
-export type JobCategory = 'Pedreiro' | 'Ajudante' | 'Eletricista' | 'Pintor';
+export type JobCategory =
+  | 'Pedreiro'
+  | 'Encanador'
+  | 'Eletricista'
+  | 'Gesseiro'
+  | 'Ajudante'
+  | 'Pintor';
 
 export type Job = {
   id: string;
