@@ -26,7 +26,15 @@ export function PrimaryButton({
         disabled && styles.disabled,
       ]}
     >
-      <Text style={[styles.label, variant === 'quiet' && styles.quietLabel]}>{title}</Text>
+      <Text
+        style={[
+          styles.label,
+          variant === 'secondary' && styles.secondaryLabel,
+          variant === 'quiet' && styles.quietLabel,
+        ]}
+      >
+        {title}
+      </Text>
     </Pressable>
   );
 }
@@ -54,6 +62,9 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 16,
     fontWeight: '700',
+  },
+  secondaryLabel: {
+    color: '#B94A1C',
   },
   quietLabel: {
     color: '#6F574A',
