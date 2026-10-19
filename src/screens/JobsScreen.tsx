@@ -12,9 +12,15 @@ type JobsScreenProps = {
   role: UserRole;
   onSelectJob: (job: Job) => void;
   onOpenProfile: () => void;
+  onOpenMyJobs: () => void;
 };
 
-export function JobsScreen({ role, onSelectJob, onOpenProfile }: JobsScreenProps) {
+export function JobsScreen({
+  role,
+  onSelectJob,
+  onOpenProfile,
+  onOpenMyJobs,
+}: JobsScreenProps) {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -112,7 +118,12 @@ export function JobsScreen({ role, onSelectJob, onOpenProfile }: JobsScreenProps
         </View>
       </ScrollView>
 
-      <BottomNavigation active="jobs" onJobsPress={() => undefined} onProfilePress={onOpenProfile} />
+      <BottomNavigation
+        active="jobs"
+        onJobsPress={() => undefined}
+        onMyJobsPress={onOpenMyJobs}
+        onProfilePress={onOpenProfile}
+      />
     </View>
   );
 }

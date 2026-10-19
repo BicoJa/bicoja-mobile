@@ -10,6 +10,8 @@ type JobDetailsScreenProps = {
   job: Job;
   onBack: () => void;
   onOpenProfile: () => void;
+  onOpenMyJobs: () => void;
+  activeNavigation: 'jobs' | 'myJobs';
 };
 
 type DetailListProps = {
@@ -34,7 +36,13 @@ function DetailList({ items, emptyMessage }: DetailListProps) {
   );
 }
 
-export function JobDetailsScreen({ job, onBack, onOpenProfile }: JobDetailsScreenProps) {
+export function JobDetailsScreen({
+  job,
+  onBack,
+  onOpenProfile,
+  onOpenMyJobs,
+  activeNavigation,
+}: JobDetailsScreenProps) {
   const [successVisible, setSuccessVisible] = useState(false);
   const requirements = job.requirements ?? [];
   const tools = job.tools ?? [];
@@ -126,7 +134,12 @@ export function JobDetailsScreen({ job, onBack, onOpenProfile }: JobDetailsScree
         </View>
       </ScrollView>
 
-      <BottomNavigation active="jobs" onJobsPress={onBack} onProfilePress={onOpenProfile} />
+      <BottomNavigation
+        active={activeNavigation}
+        onJobsPress={onBack}
+        onMyJobsPress={onOpenMyJobs}
+        onProfilePress={onOpenProfile}
+      />
       <ApplicationSuccessModal
         visible={successVisible}
         jobTitle={job.title}
