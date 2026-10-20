@@ -1,214 +1,177 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { BottomNavigation } from '../components/BottomNavigation';
-import { Job } from '../types';
-
-type MyJobStatus = 'Pendente / Agendado' | 'Em andamento' | 'Concluído';
-type StatusFilter = 'Todos' | MyJobStatus;
-
-type MyJob = {
-  id: string;
-  job: Job;
-  clientName: string;
-  status: MyJobStatus;
-  statusMessage: string;
-};
+import { Job, JobCategory } from '../types';
 
 type MyJobsScreenProps = {
   onSelectJob: (job: Job) => void;
+  onOpenChat: (job: Job) => void;
   onOpenJobs: () => void;
   onOpenProfile: () => void;
 };
 
-const FILTERS: StatusFilter[] = [
-  'Todos',
-  'Pendente / Agendado',
-  'Em andamento',
-  'Concluído',
-];
+type MyJobStatus = 'scheduled' | 'inProgress' | 'completed';
 
-const MY_JOBS: MyJob[] = [
-  {
-    id: 'historico-pedreiro-01',
-    clientName: 'Mariana Costa',
-    status: 'Pendente / Agendado',
-    statusMessage: 'Visita técnica a combinar',
-    job: {
-      id: 'historico-pedreiro-01',
-      title: 'Pedreiro',
-      category: 'Pedreiro',
-      contractor: 'Mariana Costa',
-      location: 'Manaíra, João Pessoa',
-      distance: '1,2 km de você',
-      schedule: 'Data a combinar após visita',
-      description:
-        'Serviço de alvenaria residencial. O preço será definido após visita técnica e orçamento presencial.',
-      benefits: [],
-      requirements: ['Experiência em alvenaria'],
-      tools: [],
-      postedAt: 'Solicitação recente',
-      imageUrl:
-        'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=900&q=80',
-    },
-  },
-  {
-    id: 'historico-encanador-02',
-    clientName: 'Rafael Almeida',
-    status: 'Em andamento',
-    statusMessage: 'Serviço em execução',
-    job: {
-      id: 'historico-encanador-02',
-      title: 'Encanador',
-      category: 'Encanador',
-      contractor: 'Rafael Almeida',
-      location: 'Tambaú, João Pessoa',
-      distance: '2,3 km de você',
-      schedule: 'Agendado com o cliente',
-      description:
-        'Avaliação e serviço de instalação hidráulica. Escopo e preço definidos após visita ao local.',
-      benefits: [],
-      requirements: ['Experiência em instalação hidráulica'],
-      tools: [],
-      postedAt: 'Serviço em andamento',
-      imageUrl:
-        'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=900&q=80',
-    },
-  },
-  {
-    id: 'historico-eletricista-03',
-    clientName: 'Joana Ribeiro',
-    status: 'Concluído',
-    statusMessage: 'Serviço finalizado',
-    job: {
-      id: 'historico-eletricista-03',
-      title: 'Eletricista',
-      category: 'Eletricista',
-      contractor: 'Joana Ribeiro',
-      location: 'Bancários, João Pessoa',
-      distance: '1,9 km de você',
-      schedule: 'Concluído',
-      description:
-        'Serviço de instalação elétrica. O orçamento foi alinhado presencialmente antes do início.',
-      benefits: [],
-      requirements: ['Experiência comprovada'],
-      tools: [],
-      postedAt: 'Serviço concluído',
-      imageUrl:
-        'https://images.unsplash.com/photo-1621905251918-48416bd8575a?auto=format&fit=crop&w=900&q=80',
-    },
-  },
-];
-
-const STATUS_COLORS: Record<MyJobStatus, { background: string; text: string }> = {
-  'Pendente / Agendado': { background: '#FFF0E4', text: '#B94A1C' },
-  'Em andamento': { background: '#E8EEF5', text: '#3E5C7A' },
-  Concluído: { background: '#E8F2EA', text: '#3D7048' },
+type MyJob = Job & {
+  status: MyJobStatus;
+  visitDate: string;
 };
+
+const DEMO_MY_JOBS: MyJob[] = [
+  {
+    id: 'historico-pedreiro-manaira',
+    title: 'Reparo de alvenaria',
+    category: 'Pedreiro',
+    contractor: 'Construtora Horizonte',
+    location: 'Manaíra, João Pessoa - PB',
+    distance: 'Manaíra, João Pessoa - PB',
+    schedule: '22 out 2026, às 9h',
+    description: 'Visita técnica agendada para avaliação de um serviço de alvenaria.',
+    benefits: [],
+    requirements: ['Alinhar detalhes do serviço durante a visita técnica'],
+    tools: [],
+    postedAt: 'Agendamento demonstrativo',
+    imageUrl:
+      'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=900&q=80',
+    status: 'scheduled',
+    visitDate: '22 out 2026 · 9h',
+  },
+  {
+    id: 'historico-encanador-tambau',
+    title: 'Instalação hidráulica',
+    category: 'Encanador',
+    contractor: 'Marcos Construções',
+    location: 'Tambaú, João Pessoa - PB',
+    distance: 'Tambaú, João Pessoa - PB',
+    schedule: '20 out 2026, às 14h',
+    description: 'Visita técnica para avaliação de serviço de instalação hidráulica.',
+    benefits: [],
+    requirements: ['Alinhar detalhes do serviço durante a visita técnica'],
+    tools: [],
+    postedAt: 'Agendamento demonstrativo',
+    imageUrl:
+      'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=900&q=80',
+    status: 'inProgress',
+    visitDate: '20 out 2026 · 14h',
+  },
+  {
+    id: 'historico-eletricista-bancarios',
+    title: 'Revisão elétrica',
+    category: 'Eletricista',
+    contractor: 'Equipe Nova Casa',
+    location: 'Bancários, João Pessoa - PB',
+    distance: 'Bancários, João Pessoa - PB',
+    schedule: '15 out 2026, às 10h',
+    description: 'Visita técnica concluída para avaliação de serviço elétrico.',
+    benefits: [],
+    requirements: [],
+    tools: [],
+    postedAt: 'Agendamento demonstrativo',
+    imageUrl:
+      'https://images.unsplash.com/photo-1621905251918-48416bd8575a?auto=format&fit=crop&w=900&q=80',
+    status: 'completed',
+    visitDate: '15 out 2026 · 10h',
+  },
+];
+
+const TABS: { id: 'active' | 'history'; label: string }[] = [
+  { id: 'active', label: 'Agendados / Em andamento' },
+  { id: 'history', label: 'Histórico / Concluídos' },
+];
 
 export function MyJobsScreen({
   onSelectJob,
+  onOpenChat,
   onOpenJobs,
   onOpenProfile,
 }: MyJobsScreenProps) {
-  const [filter, setFilter] = useState<StatusFilter>('Todos');
-
-  const visibleJobs = useMemo(
-    () =>
-      filter === 'Todos'
-        ? MY_JOBS
-        : MY_JOBS.filter((item) => item.status === filter),
-    [filter],
+  const [activeTab, setActiveTab] = useState<'active' | 'history'>('active');
+  const visibleJobs = DEMO_MY_JOBS.filter((job) =>
+    activeTab === 'active' ? job.status !== 'completed' : job.status === 'completed',
   );
 
   return (
     <View style={styles.screen}>
-      <ScrollView
-        contentContainerStyle={styles.content}
-        showsVerticalScrollIndicator={false}
-      >
-        <Text style={styles.eyebrow}>ACOMPANHAMENTO</Text>
-        <Text style={styles.title}>Meus bicos</Text>
-        <Text style={styles.subtitle}>
-          Acompanhe os serviços e combine a visita para definir o orçamento.
-        </Text>
+      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+        <View style={styles.hero}>
+          <Text style={styles.eyebrow}>BICO JÁ · JOÃO PESSOA / PB</Text>
+          <Text accessibilityRole="header" style={styles.title}>Meus Bicos</Text>
+          <Text style={styles.subtitle}>
+            Acompanhe as visitas técnicas e os serviços combinados.
+          </Text>
+        </View>
 
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.filters}
-        >
-          {FILTERS.map((item) => {
-            const selected = filter === item;
-            return (
-              <Pressable
-                accessibilityRole="button"
-                accessibilityState={{ selected }}
-                key={item}
-                onPress={() => setFilter(item)}
-                style={[
-                  styles.filter,
-                  selected && styles.selectedFilter,
-                ]}
-              >
-                <Text
-                  numberOfLines={1}
-                  style={[styles.filterText, selected && styles.selectedFilterText]}
+        <View style={styles.main}>
+          <Text style={styles.demoNotice}>
+            Agendamentos demonstrativos para visualizar o acompanhamento dos serviços.
+          </Text>
+
+          <View accessibilityRole="tablist" style={styles.tabs}>
+            {TABS.map((tab) => {
+              const selected = activeTab === tab.id;
+              return (
+                <Pressable
+                  key={tab.id}
+                  accessibilityRole="tab"
+                  accessibilityState={{ selected }}
+                  onPress={() => setActiveTab(tab.id)}
+                  style={[styles.tab, selected && styles.selectedTab]}
                 >
-                  {item}
-                </Text>
-              </Pressable>
-            );
-          })}
-        </ScrollView>
-
-        <Text style={styles.resultCount}>
-          {visibleJobs.length} {visibleJobs.length === 1 ? 'serviço' : 'serviços'}
-        </Text>
-
-        {visibleJobs.length > 0 ? (
-          visibleJobs.map((item) => {
-            const statusStyle = STATUS_COLORS[item.status];
-            return (
-              <Pressable
-                accessibilityRole="button"
-                accessibilityLabel={`${item.job.title}, ${item.job.location}, cliente ${item.clientName}, estado ${item.status}. Abrir detalhes.`}
-                key={item.id}
-                onPress={() => onSelectJob(item.job)}
-                style={({ pressed }) => [styles.card, pressed && styles.pressed]}
-              >
-                <View style={styles.cardHeader}>
-                  <View style={styles.titleGroup}>
-                    <Text style={styles.jobTitle}>{item.job.title}</Text>
-                    <Text style={styles.location}>{item.job.location}</Text>
-                  </View>
-                  <View style={[styles.statusBadge, { backgroundColor: statusStyle.background }]}>
-                    <Text style={[styles.statusText, { color: statusStyle.text }]}>
-                      {item.status}
-                    </Text>
-                  </View>
-                </View>
-
-                <View style={styles.divider} />
-
-                <View style={styles.cardFooter}>
-                  <View style={styles.clientBlock}>
-                    <Text style={styles.label}>CLIENTE</Text>
-                    <Text style={styles.clientName}>{item.clientName}</Text>
-                    <Text style={styles.statusMessage}>{item.statusMessage}</Text>
-                  </View>
-                  <Text style={styles.openDetails}>Detalhes ›</Text>
-                </View>
-              </Pressable>
-            );
-          })
-        ) : (
-          <View style={styles.emptyCard}>
-            <Text style={styles.emptyTitle}>Nenhum serviço nesta etapa</Text>
-            <Text style={styles.emptyMessage}>
-              Os serviços desta categoria aparecerão aqui quando estiverem disponíveis.
-            </Text>
+                  <Text style={[styles.tabText, selected && styles.selectedTabText]}>
+                    {tab.label}
+                  </Text>
+                </Pressable>
+              );
+            })}
           </View>
-        )}
+
+          <Text style={styles.sectionTitle}>
+            {activeTab === 'active' ? 'Agendados / Em andamento' : 'Histórico / Concluídos'}
+          </Text>
+
+          {visibleJobs.map((job) => (
+            <View key={job.id} style={styles.card}>
+              <View style={styles.cardHeader}>
+                <View style={styles.categoryBadge}>
+                  <Text style={styles.categoryText}>{job.category}</Text>
+                </View>
+                <Text style={styles.status}>{getStatusLabel(job.status)}</Text>
+              </View>
+
+              <Text style={styles.jobTitle}>{job.title}</Text>
+              <Text style={styles.client}>Cliente: {job.contractor}</Text>
+              <Text style={styles.location}>{job.location}</Text>
+
+              <View style={styles.visitCard}>
+                <Text style={styles.visitLabel}>VISITA TÉCNICA</Text>
+                <Text style={styles.visitDate}>{job.visitDate}</Text>
+              </View>
+
+              <Text style={styles.quoteNotice}>
+                Orçamento definido após visita técnica ao local.
+              </Text>
+
+              <View style={styles.actions}>
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel={`Ver detalhes de ${job.title}`}
+                  onPress={() => onSelectJob(job)}
+                  style={({ pressed }) => [styles.detailsButton, pressed && styles.pressed]}
+                >
+                  <Text style={styles.detailsButtonText}>Ver detalhes</Text>
+                </Pressable>
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel={`Abrir chat de texto com ${job.contractor}`}
+                  onPress={() => onOpenChat(job)}
+                  style={({ pressed }) => [styles.chatButton, pressed && styles.pressed]}
+                >
+                  <Text style={styles.chatButtonText}>Chat de texto</Text>
+                </Pressable>
+              </View>
+            </View>
+          ))}
+        </View>
       </ScrollView>
 
       <BottomNavigation
@@ -221,171 +184,209 @@ export function MyJobsScreen({
   );
 }
 
+function getStatusLabel(status: MyJobStatus) {
+  switch (status) {
+    case 'scheduled':
+      return 'Agendado';
+    case 'inProgress':
+      return 'Em andamento';
+    case 'completed':
+      return 'Concluído';
+  }
+}
+
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: '#F1F1F1',
+    backgroundColor: '#F2F2F2',
   },
   content: {
     flexGrow: 1,
-    paddingHorizontal: 18,
-    paddingTop: 30,
-    paddingBottom: 18,
+    paddingBottom: 16,
+  },
+  hero: {
+    backgroundColor: '#FF6410',
+    paddingHorizontal: 20,
+    paddingTop: 28,
+    paddingBottom: 24,
   },
   eyebrow: {
-    color: '#E9570B',
-    fontSize: 10,
-    lineHeight: 15,
-    letterSpacing: 1.5,
-    fontWeight: '800',
-  },
-  title: {
-    color: '#222222',
-    fontSize: 28,
-    lineHeight: 35,
-    fontWeight: '900',
-    marginTop: 4,
-  },
-  subtitle: {
-    color: '#666666',
-    fontSize: 13,
-    lineHeight: 19,
-    marginTop: 5,
-  },
-  filters: {
-    gap: 8,
-    paddingTop: 20,
-    paddingBottom: 15,
-  },
-  filter: {
-    height: 36,
-    flexShrink: 0,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: '#D8D8D8',
-    borderRadius: 18,
-    backgroundColor: '#FFFFFF',
-    paddingHorizontal: 12,
-  },
-  selectedFilter: {
-    backgroundColor: '#FF6410',
-  },
-  filterText: {
-    color: '#555555',
+    color: '#FFF1E8',
     fontSize: 11,
     lineHeight: 16,
-    fontWeight: '700',
+    fontWeight: '800',
+    letterSpacing: 1,
   },
-  selectedFilterText: {
+  title: {
+    color: '#FFFFFF',
+    fontSize: 27,
+    lineHeight: 34,
+    fontWeight: '900',
+    marginTop: 7,
+  },
+  subtitle: {
+    color: '#FFFFFF',
+    fontSize: 13,
+    lineHeight: 19,
+    marginTop: 4,
+  },
+  main: {
+    paddingHorizontal: 16,
+    paddingTop: 15,
+  },
+  demoNotice: {
+    color: '#666666',
+    fontSize: 11,
+    lineHeight: 16,
+    marginBottom: 12,
+  },
+  tabs: {
+    flexDirection: 'row',
+    gap: 8,
+    marginBottom: 18,
+  },
+  tab: {
+    flex: 1,
+    height: 48,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 7,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#E2E2E2',
+    backgroundColor: '#FFFFFF',
+  },
+  selectedTab: {
+    borderColor: '#FF6410',
+    backgroundColor: '#FF6410',
+  },
+  tabText: {
+    color: '#555555',
+    fontSize: 11,
+    lineHeight: 15,
+    fontWeight: '700',
+    textAlign: 'center',
+  },
+  selectedTabText: {
     color: '#FFFFFF',
   },
-  resultCount: {
-    color: '#777777',
-    fontSize: 12,
-    fontWeight: '600',
-    marginBottom: 9,
+  sectionTitle: {
+    color: '#222222',
+    fontSize: 16,
+    lineHeight: 22,
+    fontWeight: '800',
+    marginBottom: 11,
   },
   card: {
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: '#E3E3E3',
+    borderColor: '#E5E5E5',
     backgroundColor: '#FFFFFF',
     padding: 15,
     marginBottom: 12,
   },
   cardHeader: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     justifyContent: 'space-between',
-    gap: 9,
+    gap: 8,
   },
-  titleGroup: {
-    flex: 1,
+  categoryBadge: {
+    alignSelf: 'flex-start',
+    borderRadius: 12,
+    backgroundColor: '#FFF1E8',
+    paddingHorizontal: 9,
+    paddingVertical: 5,
+  },
+  categoryText: {
+    color: '#A53B08',
+    fontSize: 11,
+    fontWeight: '800',
+  },
+  status: {
+    color: '#555555',
+    fontSize: 11,
+    fontWeight: '700',
   },
   jobTitle: {
-    color: '#252525',
-    fontSize: 16,
-    lineHeight: 21,
+    color: '#222222',
+    fontSize: 17,
+    lineHeight: 23,
     fontWeight: '800',
+    marginTop: 9,
+  },
+  client: {
+    color: '#444444',
+    fontSize: 13,
+    lineHeight: 19,
+    marginTop: 4,
   },
   location: {
     color: '#666666',
     fontSize: 12,
     lineHeight: 18,
-    marginTop: 4,
+    marginTop: 2,
   },
-  statusBadge: {
-    maxWidth: 136,
-    borderRadius: 13,
-    paddingHorizontal: 9,
-    paddingVertical: 5,
+  visitCard: {
+    borderRadius: 11,
+    backgroundColor: '#F7F7F7',
+    padding: 11,
+    marginTop: 12,
   },
-  statusText: {
+  visitLabel: {
+    color: '#A53B08',
     fontSize: 10,
     lineHeight: 14,
     fontWeight: '800',
-    textAlign: 'center',
-  },
-  divider: {
-    height: 1,
-    backgroundColor: '#EEEEEE',
-    marginVertical: 12,
-  },
-  cardFooter: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    justifyContent: 'space-between',
-    gap: 8,
-  },
-  clientBlock: {
-    flex: 1,
-  },
-  label: {
-    color: '#888888',
-    fontSize: 9,
-    lineHeight: 13,
     letterSpacing: 0.7,
-    fontWeight: '800',
   },
-  clientName: {
+  visitDate: {
     color: '#333333',
     fontSize: 13,
-    lineHeight: 18,
+    lineHeight: 19,
     fontWeight: '700',
-    marginTop: 2,
-  },
-  statusMessage: {
-    color: '#777777',
-    fontSize: 11,
-    lineHeight: 16,
     marginTop: 3,
   },
-  openDetails: {
-    color: '#D94D08',
-    fontSize: 12,
-    lineHeight: 18,
-    fontWeight: '800',
+  quoteNotice: {
+    color: '#555555',
+    fontSize: 11,
+    lineHeight: 16,
+    marginTop: 10,
   },
-  emptyCard: {
+  actions: {
+    flexDirection: 'row',
+    gap: 9,
+    marginTop: 14,
+  },
+  detailsButton: {
+    flex: 1,
+    minHeight: 42,
     alignItems: 'center',
-    borderRadius: 16,
-    backgroundColor: '#FFFFFF',
-    padding: 22,
-    marginTop: 4,
+    justifyContent: 'center',
+    borderRadius: 11,
+    backgroundColor: '#FF6410',
+    paddingHorizontal: 8,
   },
-  emptyTitle: {
-    color: '#333333',
-    fontSize: 15,
-    fontWeight: '800',
-    textAlign: 'center',
-  },
-  emptyMessage: {
-    color: '#777777',
+  detailsButtonText: {
+    color: '#FFFFFF',
     fontSize: 12,
-    lineHeight: 18,
-    textAlign: 'center',
-    marginTop: 6,
+    fontWeight: '800',
+  },
+  chatButton: {
+    flex: 1,
+    minHeight: 42,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 11,
+    borderWidth: 1,
+    borderColor: '#E5E5E5',
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 8,
+  },
+  chatButtonText: {
+    color: '#444444',
+    fontSize: 12,
+    fontWeight: '800',
   },
   pressed: {
     opacity: 0.82,

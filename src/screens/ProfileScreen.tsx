@@ -12,12 +12,7 @@ type ProfileScreenProps = {
 
 type ProfileAction = 'edit' | 'terms' | null;
 
-export function ProfileScreen({
-  role,
-  onOpenJobs,
-  onOpenMyJobs,
-  onSignOut,
-}: ProfileScreenProps) {
+export function ProfileScreen({ role, onOpenJobs, onOpenMyJobs, onSignOut }: ProfileScreenProps) {
   const [activeAction, setActiveAction] = useState<ProfileAction>(null);
   const isWorker = role === 'trabalhador';
   const accountType = isWorker ? 'Prestador de serviços' : 'Cliente';

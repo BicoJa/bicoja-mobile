@@ -2,6 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Job } from './src/types';
+import { ChatScreen } from './src/screens/ChatScreen';
 import { JobDetailsScreen } from './src/screens/JobDetailsScreen';
 import { JobsScreen } from './src/screens/JobsScreen';
 import { LoginScreen } from './src/screens/LoginScreen';
@@ -9,7 +10,7 @@ import { MyJobsScreen } from './src/screens/MyJobsScreen';
 import { ProfileScreen } from './src/screens/ProfileScreen';
 
 type UserRole = 'trabalhador' | 'contratante';
-type Screen = 'login' | 'jobs' | 'myJobs' | 'details' | 'profile';
+type Screen = 'login' | 'jobs' | 'myJobs' | 'details' | 'chat' | 'profile';
 
 export default function App() {
   const [screen, setScreen] = useState<Screen>('login');
@@ -28,6 +29,12 @@ export default function App() {
     setScreen('details');
   };
 
+  const handleOpenChat = (job: Job) => {
+    setSelectedJob(job);
+    setDetailsOrigin('myJobs');
+    setScreen('chat');
+  };
+
   return (
     <View style={styles.app}>
       <StatusBar style="dark" />
@@ -36,13 +43,14 @@ export default function App() {
         <JobsScreen
           role={role}
           onSelectJob={(job) => handleSelectJob(job, 'jobs')}
-          onOpenProfile={() => setScreen('profile')}
           onOpenMyJobs={() => setScreen('myJobs')}
+          onOpenProfile={() => setScreen('profile')}
         />
       )}
       {screen === 'myJobs' && (
         <MyJobsScreen
           onSelectJob={(job) => handleSelectJob(job, 'myJobs')}
+          onOpenChat={handleOpenChat}
           onOpenJobs={() => setScreen('jobs')}
           onOpenProfile={() => setScreen('profile')}
         />
@@ -51,6 +59,18 @@ export default function App() {
         <JobDetailsScreen
           job={selectedJob}
           onBack={() => setScreen(detailsOrigin)}
+          onOpenMyJobs={() => setScreen('myJobs')}
+          onOpenProfile={() => setScreen('profile')}
+          onOpenChat={() => setScreen('chat')}
+          activeNavigation={detailsOrigin}
+        />
+      )}
+      {screen === 'chat' && selectedJob && (
+        <ChatScreen
+          job={selectedJob}
+          onBackToDetails={() => setScreen('details')}
+          onBackToJobs={() => setScreen('jobs')}
+          onOpenMyJobs={() => setScreen('myJobs')}
           onOpenProfile={() => setScreen('profile')}
           onOpenMyJobs={() => setScreen('myJobs')}
           activeNavigation={detailsOrigin}

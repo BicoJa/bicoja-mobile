@@ -9,8 +9,9 @@ import { Job } from '../types';
 type JobDetailsScreenProps = {
   job: Job;
   onBack: () => void;
-  onOpenProfile: () => void;
   onOpenMyJobs: () => void;
+  onOpenProfile: () => void;
+  onOpenChat: () => void;
   activeNavigation: 'jobs' | 'myJobs';
 };
 
@@ -39,8 +40,9 @@ function DetailList({ items, emptyMessage }: DetailListProps) {
 export function JobDetailsScreen({
   job,
   onBack,
-  onOpenProfile,
   onOpenMyJobs,
+  onOpenProfile,
+  onOpenChat,
   activeNavigation,
 }: JobDetailsScreenProps) {
   const [successVisible, setSuccessVisible] = useState(false);
@@ -138,6 +140,13 @@ export function JobDetailsScreen({
               title="Combinar visita técnica"
               onPress={() => setSuccessVisible(true)}
             />
+            <View style={styles.chatAction}>
+              <PrimaryButton
+                title="Conversar por texto"
+                variant="secondary"
+                onPress={onOpenChat}
+              />
+            </View>
           </View>
         </View>
       </ScrollView>
@@ -148,7 +157,7 @@ export function JobDetailsScreen({
         onMyJobsPress={onOpenMyJobs}
         onProfilePress={onOpenProfile}
       />
-      <VisitRequestModal
+      <ApplicationSuccessModal
         visible={successVisible}
         jobTitle={job.title}
         clientName={job.contractor}
@@ -334,6 +343,9 @@ const styles = StyleSheet.create({
   application: {
     marginTop: 22,
     marginBottom: 12,
+  },
+  chatAction: {
+    marginTop: 10,
   },
   pressed: {
     opacity: 0.82,

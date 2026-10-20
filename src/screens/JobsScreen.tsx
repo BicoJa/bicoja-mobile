@@ -11,6 +11,7 @@ type UserRole = 'trabalhador' | 'contratante';
 type JobsScreenProps = {
   role: UserRole;
   onSelectJob: (job: Job) => void;
+  onOpenMyJobs: () => void;
   onOpenProfile: () => void;
   onOpenMyJobs: () => void;
 };
@@ -18,8 +19,8 @@ type JobsScreenProps = {
 export function JobsScreen({
   role,
   onSelectJob,
-  onOpenProfile,
   onOpenMyJobs,
+  onOpenProfile,
 }: JobsScreenProps) {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
