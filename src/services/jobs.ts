@@ -1,10 +1,5 @@
 import { Job, JobCategory } from '../types';
-
-declare const process: {
-  env: {
-    EXPO_PUBLIC_API_URL?: string;
-  };
-};
+import { getJobsFromApi, isApiConfigured } from './api';
 
 const DEMO_JOBS: Job[] = [
   {
@@ -99,19 +94,12 @@ const wait = (duration: number) =>
   new Promise<void>((resolve) => setTimeout(resolve, duration));
 
 export async function getJobs(): Promise<Job[]> {
-  const apiBaseUrl = process.env.EXPO_PUBLIC_API_URL?.trim();
-
-  if (!apiBaseUrl) {
+  if (!isApiConfigured()) {
     await wait(700);
     return DEMO_JOBS;
   }
 
-  const response = await fetch(`${apiBaseUrl.replace(/\/$/, '')}/jobs`);
-  if (!response.ok) {
-    throw new Error('Não foi possível carregar as vagas agora.');
-  }
-
-  const payload: unknown = await response.json();
+  const payload = await getJobsFromApi();
   const jobs = Array.isArray(payload)
     ? payload
     : payload &&
