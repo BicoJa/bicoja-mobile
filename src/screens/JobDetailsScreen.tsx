@@ -157,7 +157,7 @@ export function JobDetailsScreen({
         onMyJobsPress={onOpenMyJobs}
         onProfilePress={onOpenProfile}
       />
-      <ApplicationSuccessModal
+      <VisitRequestModal
         visible={successVisible}
         jobTitle={job.title}
         clientName={job.contractor}

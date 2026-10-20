@@ -13,7 +13,6 @@ type JobsScreenProps = {
   onSelectJob: (job: Job) => void;
   onOpenMyJobs: () => void;
   onOpenProfile: () => void;
-  onOpenMyJobs: () => void;
 };
 
 export function JobsScreen({
@@ -58,7 +57,6 @@ export function JobsScreen({
             <Text accessibilityLabel="Bico Já" style={styles.brand}>BICO<Text style={styles.brandAccent}>JÁ</Text></Text>
             <View style={styles.topIcons}>
               <Text accessibilityLabel="Menu" style={styles.topIcon}>☰</Text>
-              <Text accessibilityLabel="Notificações" style={styles.topIcon}>♧</Text>
             </View>
           </View>
           <Text style={styles.greeting}>Olá, José!</Text>
