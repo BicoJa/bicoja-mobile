@@ -9,7 +9,10 @@ import { Job } from '../types';
 type JobDetailsScreenProps = {
   job: Job;
   onBack: () => void;
+  onOpenMyJobs: () => void;
   onOpenProfile: () => void;
+  onOpenChat: () => void;
+  activeNavigation: 'jobs' | 'myJobs';
 };
 
 type DetailListProps = {
@@ -34,7 +37,14 @@ function DetailList({ items, emptyMessage }: DetailListProps) {
   );
 }
 
-export function JobDetailsScreen({ job, onBack, onOpenProfile }: JobDetailsScreenProps) {
+export function JobDetailsScreen({
+  job,
+  onBack,
+  onOpenMyJobs,
+  onOpenProfile,
+  onOpenChat,
+  activeNavigation,
+}: JobDetailsScreenProps) {
   const [successVisible, setSuccessVisible] = useState(false);
   const requirements = job.requirements ?? [];
   const tools = job.tools ?? [];
@@ -122,11 +132,23 @@ export function JobDetailsScreen({ job, onBack, onOpenProfile }: JobDetailsScree
               title="Tenho interesse"
               onPress={() => setSuccessVisible(true)}
             />
+            <View style={styles.chatAction}>
+              <PrimaryButton
+                title="Conversar por texto"
+                variant="secondary"
+                onPress={onOpenChat}
+              />
+            </View>
           </View>
         </View>
       </ScrollView>
 
-      <BottomNavigation active="jobs" onJobsPress={onBack} onProfilePress={onOpenProfile} />
+      <BottomNavigation
+        active={activeNavigation}
+        onJobsPress={onBack}
+        onMyJobsPress={onOpenMyJobs}
+        onProfilePress={onOpenProfile}
+      />
       <ApplicationSuccessModal
         visible={successVisible}
         jobTitle={job.title}
@@ -309,6 +331,9 @@ const styles = StyleSheet.create({
   application: {
     marginTop: 22,
     marginBottom: 12,
+  },
+  chatAction: {
+    marginTop: 10,
   },
   pressed: {
     opacity: 0.82,

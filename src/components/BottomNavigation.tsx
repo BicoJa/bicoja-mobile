@@ -1,14 +1,16 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 type BottomNavigationProps = {
-  active: 'jobs' | 'profile';
+  active: 'jobs' | 'myJobs' | 'profile';
   onJobsPress: () => void;
+  onMyJobsPress: () => void;
   onProfilePress: () => void;
 };
 
 export function BottomNavigation({
   active,
   onJobsPress,
+  onMyJobsPress,
   onProfilePress,
 }: BottomNavigationProps) {
   return (
@@ -21,6 +23,15 @@ export function BottomNavigation({
       >
         <Text style={[styles.icon, active === 'jobs' && styles.activeText]}>⌂</Text>
         <Text style={[styles.label, active === 'jobs' && styles.activeText]}>Início</Text>
+      </Pressable>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityState={{ selected: active === 'myJobs' }}
+        onPress={onMyJobsPress}
+        style={styles.item}
+      >
+        <Text style={[styles.icon, active === 'myJobs' && styles.activeText]}>▤</Text>
+        <Text style={[styles.label, active === 'myJobs' && styles.activeText]}>Meus bicos</Text>
       </Pressable>
       <Pressable
         accessibilityRole="button"
@@ -38,10 +49,10 @@ export function BottomNavigation({
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    backgroundColor: '#484848',
+    backgroundColor: '#FFFFFF',
     borderTopWidth: 1,
-    borderTopColor: '#777777',
-    paddingTop: 6,
+    borderTopColor: '#E5E5E5',
+    paddingTop: 7,
     paddingBottom: 10,
   },
   item: {
@@ -52,14 +63,15 @@ const styles = StyleSheet.create({
     gap: 1,
   },
   icon: {
-    color: '#BDBDBD',
+    color: '#777777',
     fontSize: 20,
     fontWeight: '700',
   },
   label: {
-    color: '#D0D0D0',
+    color: '#666666',
     fontSize: 11,
     fontWeight: '600',
+    textAlign: 'center',
   },
   activeText: {
     color: '#FF6410',
