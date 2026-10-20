@@ -72,6 +72,8 @@ export default function App() {
           onBackToJobs={() => setScreen('jobs')}
           onOpenMyJobs={() => setScreen('myJobs')}
           onOpenProfile={() => setScreen('profile')}
+          onOpenMyJobs={() => setScreen('myJobs')}
+          activeNavigation={detailsOrigin}
         />
       )}
       {screen === 'profile' && (

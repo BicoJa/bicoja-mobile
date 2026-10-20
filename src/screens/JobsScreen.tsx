@@ -13,6 +13,7 @@ type JobsScreenProps = {
   onSelectJob: (job: Job) => void;
   onOpenMyJobs: () => void;
   onOpenProfile: () => void;
+  onOpenMyJobs: () => void;
 };
 
 export function JobsScreen({

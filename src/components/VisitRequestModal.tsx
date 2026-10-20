@@ -1,38 +1,47 @@
 import { Modal, StyleSheet, Text, View } from 'react-native';
 import { PrimaryButton } from './PrimaryButton';
 
-type ApplicationSuccessModalProps = {
+type VisitRequestModalProps = {
   visible: boolean;
   jobTitle: string;
-  onReturnToJobs: () => void;
+  clientName: string;
+  location: string;
+  onClose: () => void;
 };
 
-export function ApplicationSuccessModal({
+export function VisitRequestModal({
   visible,
   jobTitle,
-  onReturnToJobs,
-}: ApplicationSuccessModalProps) {
+  clientName,
+  location,
+  onClose,
+}: VisitRequestModalProps) {
   return (
     <Modal
       accessibilityViewIsModal
       animationType="fade"
-      onRequestClose={onReturnToJobs}
+      onRequestClose={onClose}
       transparent
       visible={visible}
     >
       <View style={styles.overlay}>
         <View accessibilityRole="alert" style={styles.card}>
           <View style={styles.successMark}>
-            <Text style={styles.check}>✓</Text>
+            <Text style={styles.check}>!</Text>
           </View>
           <Text accessibilityRole="header" style={styles.title}>
-            Interesse enviado com sucesso!
+            Combine a visita técnica
           </Text>
           <Text style={styles.message}>
-            A contratante foi notificada do seu interesse em{' '}
-            <Text style={styles.jobTitle}>{jobTitle}</Text> e poderá entrar em contato.
+            O atendimento de <Text style={styles.jobTitle}>{jobTitle}</Text> será orçado após a
+            visita em <Text style={styles.jobTitle}>{location}</Text>. O cliente é{' '}
+            <Text style={styles.jobTitle}>{clientName}</Text>.
           </Text>
-          <PrimaryButton title="Voltar ao mural" onPress={onReturnToJobs} />
+          <Text style={styles.note}>
+            Os dados de contacto ainda não estão disponíveis neste protótipo. A solicitação não
+            foi enviada ao cliente.
+          </Text>
+          <PrimaryButton title="Entendi" onPress={onClose} />
         </View>
       </View>
     </Modal>
@@ -52,8 +61,8 @@ const styles = StyleSheet.create({
     maxWidth: 400,
     alignItems: 'center',
     borderRadius: 20,
-    borderWidth: 2,
-    borderColor: '#FF6410',
+    borderWidth: 1,
+    borderColor: '#E4E4E4',
     backgroundColor: '#FFFFFF',
     paddingHorizontal: 22,
     paddingTop: 26,
@@ -65,12 +74,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 30,
-    backgroundColor: '#FFF0E4',
+    backgroundColor: '#FF6410',
     marginBottom: 16,
   },
   check: {
-    color: '#E9570B',
-    fontSize: 34,
+    color: '#FFFFFF',
+    fontSize: 28,
     lineHeight: 40,
     fontWeight: '900',
   },
@@ -87,10 +96,17 @@ const styles = StyleSheet.create({
     lineHeight: 21,
     textAlign: 'center',
     marginTop: 10,
-    marginBottom: 22,
+    marginBottom: 10,
   },
   jobTitle: {
     color: '#333333',
     fontWeight: '800',
+  },
+  note: {
+    color: '#777777',
+    fontSize: 12,
+    lineHeight: 18,
+    textAlign: 'center',
+    marginBottom: 20,
   },
 });

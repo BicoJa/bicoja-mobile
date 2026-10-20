@@ -12,7 +12,7 @@ const DEMO_JOBS: Job[] = [
     title: 'Pedreiro',
     category: 'Pedreiro',
     contractor: 'Construtora Horizonte',
-    location: 'Manaíra, João Pessoa',
+    location: 'Manaíra, João Pessoa - PB',
     distance: '1,2 km de você',
     schedule: 'Seg a sex, das 7h às 17h',
     description:
@@ -29,7 +29,7 @@ const DEMO_JOBS: Job[] = [
     title: 'Encanador',
     category: 'Encanador',
     contractor: 'Marcos Construções',
-    location: 'Tambaú, João Pessoa',
+    location: 'Tambaú, João Pessoa - PB',
     distance: '2,3 km de você',
     schedule: 'Seg a sex, das 8h às 17h',
     description:
@@ -46,7 +46,7 @@ const DEMO_JOBS: Job[] = [
     title: 'Eletricista',
     category: 'Eletricista',
     contractor: 'Equipe Nova Casa',
-    location: 'Bancários, João Pessoa',
+    location: 'Bancários, João Pessoa - PB',
     distance: '1,9 km de você',
     schedule: 'Seg a sex, horário comercial',
     description:
