@@ -6,12 +6,18 @@ import { PrimaryButton } from '../components/PrimaryButton';
 type ProfileScreenProps = {
   role: 'trabalhador' | 'contratante';
   onOpenJobs: () => void;
+  onOpenMyJobs: () => void;
   onSignOut: () => void;
 };
 
 type ProfileAction = 'edit' | 'terms' | null;
 
-export function ProfileScreen({ role, onOpenJobs, onSignOut }: ProfileScreenProps) {
+export function ProfileScreen({
+  role,
+  onOpenJobs,
+  onOpenMyJobs,
+  onSignOut,
+}: ProfileScreenProps) {
   const [activeAction, setActiveAction] = useState<ProfileAction>(null);
   const isWorker = role === 'trabalhador';
   const accountType = isWorker ? 'Prestador de serviços' : 'Cliente';
@@ -72,6 +78,7 @@ export function ProfileScreen({ role, onOpenJobs, onSignOut }: ProfileScreenProp
       <BottomNavigation
         active="profile"
         onJobsPress={onOpenJobs}
+        onMyJobsPress={onOpenMyJobs}
         onProfilePress={() => undefined}
       />
 

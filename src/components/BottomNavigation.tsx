@@ -1,14 +1,16 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 type BottomNavigationProps = {
-  active: 'jobs' | 'profile';
+  active: 'jobs' | 'myJobs' | 'profile';
   onJobsPress: () => void;
+  onMyJobsPress: () => void;
   onProfilePress: () => void;
 };
 
 export function BottomNavigation({
   active,
   onJobsPress,
+  onMyJobsPress,
   onProfilePress,
 }: BottomNavigationProps) {
   return (
@@ -21,6 +23,15 @@ export function BottomNavigation({
       >
         <Text style={[styles.icon, active === 'jobs' && styles.activeText]}>⌂</Text>
         <Text style={[styles.label, active === 'jobs' && styles.activeText]}>Início</Text>
+      </Pressable>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityState={{ selected: active === 'myJobs' }}
+        onPress={onMyJobsPress}
+        style={styles.item}
+      >
+        <Text style={[styles.icon, active === 'myJobs' && styles.activeText]}>▣</Text>
+        <Text style={[styles.label, active === 'myJobs' && styles.activeText]}>Meus bicos</Text>
       </Pressable>
       <Pressable
         accessibilityRole="button"
