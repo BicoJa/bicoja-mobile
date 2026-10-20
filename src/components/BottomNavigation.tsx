@@ -3,14 +3,14 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 type BottomNavigationProps = {
   active: 'jobs' | 'myJobs' | 'profile';
   onJobsPress: () => void;
-  onMyJobsPress: () => void;
+  onMyJobsPress?: () => void;
   onProfilePress: () => void;
 };
 
 export function BottomNavigation({
   active,
   onJobsPress,
-  onMyJobsPress,
+  onMyJobsPress = onJobsPress,
   onProfilePress,
 }: BottomNavigationProps) {
   return (

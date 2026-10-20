@@ -10,7 +10,7 @@ import { MyJobsScreen } from './src/screens/MyJobsScreen';
 import { ProfileScreen } from './src/screens/ProfileScreen';
 
 type UserRole = 'trabalhador' | 'contratante';
-type Screen = 'login' | 'jobs' | 'myJobs' | 'details' | 'chat' | 'profile';
+type Screen = 'login' | 'jobs' | 'myJobs' | 'details' | 'profile';
 
 export default function App() {
   const [screen, setScreen] = useState<Screen>('login');
@@ -51,6 +51,12 @@ export default function App() {
         <MyJobsScreen
           onSelectJob={(job) => handleSelectJob(job, 'myJobs')}
           onOpenChat={handleOpenChat}
+          onOpenJobs={() => setScreen('jobs')}
+          onOpenProfile={() => setScreen('profile')}
+        />
+      )}
+      {screen === 'myJobs' && (
+        <MyJobsScreen
           onOpenJobs={() => setScreen('jobs')}
           onOpenProfile={() => setScreen('profile')}
         />
