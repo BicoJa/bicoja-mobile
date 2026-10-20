@@ -5,10 +5,11 @@ import { Job } from './src/types';
 import { JobDetailsScreen } from './src/screens/JobDetailsScreen';
 import { JobsScreen } from './src/screens/JobsScreen';
 import { LoginScreen } from './src/screens/LoginScreen';
+import { MyJobsScreen } from './src/screens/MyJobsScreen';
 import { ProfileScreen } from './src/screens/ProfileScreen';
 
 type UserRole = 'trabalhador' | 'contratante';
-type Screen = 'login' | 'jobs' | 'details' | 'profile';
+type Screen = 'login' | 'jobs' | 'myJobs' | 'details' | 'profile';
 
 export default function App() {
   const [screen, setScreen] = useState<Screen>('login');
@@ -36,6 +37,12 @@ export default function App() {
           onOpenProfile={() => setScreen('profile')}
         />
       )}
+      {screen === 'myJobs' && (
+        <MyJobsScreen
+          onOpenJobs={() => setScreen('jobs')}
+          onOpenProfile={() => setScreen('profile')}
+        />
+      )}
       {screen === 'details' && selectedJob && (
         <JobDetailsScreen
           job={selectedJob}
@@ -47,6 +54,7 @@ export default function App() {
         <ProfileScreen
           role={role}
           onOpenJobs={() => setScreen('jobs')}
+          onOpenMyJobs={() => setScreen('myJobs')}
           onSignOut={() => setScreen('login')}
         />
       )}

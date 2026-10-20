@@ -6,15 +6,23 @@ import { PrimaryButton } from '../components/PrimaryButton';
 type ProfileScreenProps = {
   role: 'trabalhador' | 'contratante';
   onOpenJobs: () => void;
+  onOpenMyJobs: () => void;
   onSignOut: () => void;
 };
 
-type ProfileAction = 'edit' | 'terms' | null;
+type ProfileAction = 'edit' | 'privacy' | 'terms' | null;
 
-export function ProfileScreen({ role, onOpenJobs, onSignOut }: ProfileScreenProps) {
+const SPECIALTIES = ['Alvenaria', 'Reparos', 'Assentamento de revestimentos'];
+const SERVICE_AREAS = ['Manaíra', 'Tambaú', 'Bancários', 'Mangabeira'];
+
+export function ProfileScreen({
+  role,
+  onOpenJobs,
+  onOpenMyJobs,
+  onSignOut,
+}: ProfileScreenProps) {
   const [activeAction, setActiveAction] = useState<ProfileAction>(null);
   const isWorker = role === 'trabalhador';
-  const accountType = isWorker ? 'Prestador de serviços' : 'Cliente';
 
   return (
     <View style={styles.screen}>
@@ -22,56 +30,97 @@ export function ProfileScreen({ role, onOpenJobs, onSignOut }: ProfileScreenProp
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.eyebrow}>BICO JÁ</Text>
-        <Text style={styles.pageTitle}>Meu perfil</Text>
+        <Text style={styles.eyebrow}>BICO JÁ · JOÃO PESSOA / PB</Text>
+        <Text accessibilityRole="header" style={styles.pageTitle}>Perfil profissional</Text>
 
         <View style={styles.profileCard}>
-          <View
-            accessibilityLabel={`Avatar de ${accountType}`}
-            style={styles.avatar}
-          >
+          <View accessibilityLabel="Avatar demonstrativo do prestador" style={styles.avatar}>
             <Text style={styles.avatarText}>{isWorker ? 'PS' : 'CL'}</Text>
           </View>
-          <Text style={styles.name}>{isWorker ? 'Prestador de serviços' : 'Cliente Bico Já'}</Text>
-          <Text style={styles.accountType}>{accountType}</Text>
+          <Text style={styles.name}>
+            {isWorker ? 'Prestador de serviços' : 'Cliente Bico Já'}
+          </Text>
+          <Text style={styles.accountType}>
+            {isWorker ? 'Profissional da construção civil' : 'Conta de cliente'}
+          </Text>
           <View style={styles.ratingRow}>
             <Text accessibilityLabel="Ainda sem avaliações" style={styles.stars}>☆☆☆☆☆</Text>
             <Text style={styles.ratingText}>Sem avaliações</Text>
           </View>
         </View>
 
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Informações de contacto</Text>
+        {isWorker && (
+          <>
+            <ProfileSection title="Especialidades">
+              <Text style={styles.helperText}>
+                Especialidades demonstrativas. Edite o perfil para informar suas áreas de atuação.
+              </Text>
+              <View style={styles.chipList}>
+                {SPECIALTIES.map((specialty) => (
+                  <View key={specialty} style={styles.chip}>
+                    <Text style={styles.chipText}>{specialty}</Text>
+                  </View>
+                ))}
+              </View>
+            </ProfileSection>
+
+            <ProfileSection title="Zona de atuação">
+              <Text style={styles.locationTitle}>João Pessoa, PB</Text>
+              <Text style={styles.helperText}>Bairros demonstrativos:</Text>
+              <View style={styles.chipList}>
+                {SERVICE_AREAS.map((area) => (
+                  <View key={area} style={styles.areaChip}>
+                    <Text style={styles.areaChipText}>{area}</Text>
+                  </View>
+                ))}
+              </View>
+            </ProfileSection>
+          </>
+        )}
+
+        <ProfileSection title="Dados da conta">
           <View style={styles.infoCard}>
-            <ProfileInfo label="E-mail" value="Adicione o seu e-mail" />
+            <ProfileInfo label="Tipo de conta" value={isWorker ? 'Prestador de serviços' : 'Cliente'} />
             <View style={styles.divider} />
-            <ProfileInfo label="Telemóvel" value="Adicione o seu telemóvel" />
+            <ProfileInfo label="E-mail" value="Não informado" />
+            <View style={styles.divider} />
+            <ProfileInfo label="Telemóvel" value="Não informado" />
             <View style={styles.divider} />
             <ProfileInfo label="Localização" value="João Pessoa, PB" />
           </View>
-        </View>
+        </ProfileSection>
 
-        <View style={styles.actions}>
-          <PrimaryButton
-            title="Editar Perfil"
-            onPress={() => setActiveAction('edit')}
-          />
-          <PrimaryButton
-            title="Termos de Serviço"
-            variant="secondary"
-            onPress={() => setActiveAction('terms')}
-          />
-          <PrimaryButton
-            title="Terminar Sessão"
-            variant="quiet"
-            onPress={onSignOut}
-          />
+        <ProfileSection title="Definições da conta">
+          <View style={styles.settingsCard}>
+            <SettingsAction
+              label="Editar perfil"
+              description="Atualize os seus dados e especialidades"
+              onPress={() => setActiveAction('edit')}
+            />
+            <View style={styles.divider} />
+            <SettingsAction
+              label="Privacidade e segurança"
+              description="Consulte as opções da sua conta"
+              onPress={() => setActiveAction('privacy')}
+            />
+            <View style={styles.divider} />
+            <SettingsAction
+              label="Termos de serviço"
+              description="Leia as regras de utilização do Bico Já"
+              onPress={() => setActiveAction('terms')}
+            />
+          </View>
+        </ProfileSection>
+
+        <View style={styles.signOutAction}>
+          <PrimaryButton title="Terminar sessão" variant="quiet" onPress={onSignOut} />
         </View>
       </ScrollView>
 
       <BottomNavigation
         active="profile"
         onJobsPress={onOpenJobs}
+        onMyJobsPress={onOpenMyJobs}
         onProfilePress={() => undefined}
       />
 
@@ -79,6 +128,20 @@ export function ProfileScreen({ role, onOpenJobs, onSignOut }: ProfileScreenProp
         action={activeAction}
         onClose={() => setActiveAction(null)}
       />
+    </View>
+  );
+}
+
+type ProfileSectionProps = {
+  title: string;
+  children: React.ReactNode;
+};
+
+function ProfileSection({ title, children }: ProfileSectionProps) {
+  return (
+    <View style={styles.section}>
+      <Text style={styles.sectionTitle}>{title}</Text>
+      {children}
     </View>
   );
 }
@@ -97,6 +160,28 @@ function ProfileInfo({ label, value }: ProfileInfoProps) {
   );
 }
 
+type SettingsActionProps = {
+  label: string;
+  description: string;
+  onPress: () => void;
+};
+
+function SettingsAction({ label, description, onPress }: SettingsActionProps) {
+  return (
+    <Pressable
+      accessibilityRole="button"
+      onPress={onPress}
+      style={({ pressed }) => [styles.settingsAction, pressed && styles.pressed]}
+    >
+      <View style={styles.settingsCopy}>
+        <Text style={styles.settingsLabel}>{label}</Text>
+        <Text style={styles.settingsDescription}>{description}</Text>
+      </View>
+      <Text style={styles.chevron}>›</Text>
+    </Pressable>
+  );
+}
+
 type ProfileActionModalProps = {
   action: ProfileAction;
   onClose: () => void;
@@ -107,7 +192,21 @@ function ProfileActionModal({ action, onClose }: ProfileActionModalProps) {
     return null;
   }
 
-  const isEditAction = action === 'edit';
+  const modalContent = {
+    edit: {
+      title: 'Editar perfil',
+      message: 'A edição dos dados estará disponível quando a conta estiver conectada.',
+    },
+    privacy: {
+      title: 'Privacidade e segurança',
+      message: 'As definições de privacidade estarão disponíveis quando a conta estiver conectada.',
+    },
+    terms: {
+      title: 'Termos de serviço',
+      message:
+        'O Bico Já conecta profissionais e clientes. O orçamento do serviço é definido após visita técnica e avaliação no local.',
+    },
+  }[action];
 
   return (
     <Modal
@@ -119,19 +218,9 @@ function ProfileActionModal({ action, onClose }: ProfileActionModalProps) {
     >
       <View style={styles.modalOverlay}>
         <View accessibilityRole="alert" style={styles.modalCard}>
-          <Text accessibilityRole="header" style={styles.modalTitle}>
-            {isEditAction ? 'Editar Perfil' : 'Termos de Serviço'}
-          </Text>
-          <Text style={styles.modalMessage}>
-            {isEditAction
-              ? 'A edição dos dados do perfil estará disponível quando a conta estiver conectada.'
-              : 'O Bico Já conecta prestadores de serviços e clientes. O preço do serviço é definido após visita técnica e orçamento presencial.'}
-          </Text>
-          <PrimaryButton
-            title="Fechar"
-            variant="secondary"
-            onPress={onClose}
-          />
+          <Text accessibilityRole="header" style={styles.modalTitle}>{modalContent.title}</Text>
+          <Text style={styles.modalMessage}>{modalContent.message}</Text>
+          <PrimaryButton title="Fechar" variant="secondary" onPress={onClose} />
         </View>
       </View>
     </Modal>
@@ -141,27 +230,28 @@ function ProfileActionModal({ action, onClose }: ProfileActionModalProps) {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: '#F1F1F1',
+    backgroundColor: '#F2F2F2',
   },
   content: {
     flexGrow: 1,
     paddingHorizontal: 20,
-    paddingTop: 30,
+    paddingTop: 28,
     paddingBottom: 24,
   },
   eyebrow: {
-    color: '#E9570B',
+    color: '#A53B08',
     fontSize: 11,
+    lineHeight: 16,
     fontWeight: '800',
-    letterSpacing: 1.6,
+    letterSpacing: 1,
   },
   pageTitle: {
     color: '#222222',
-    fontSize: 28,
+    fontSize: 27,
     lineHeight: 35,
     fontWeight: '900',
-    marginTop: 4,
-    marginBottom: 20,
+    marginTop: 5,
+    marginBottom: 18,
   },
   profileCard: {
     alignItems: 'center',
@@ -173,15 +263,15 @@ const styles = StyleSheet.create({
   avatar: {
     width: 76,
     height: 76,
-    borderRadius: 38,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#FFF0E4',
+    borderRadius: 38,
     borderWidth: 2,
     borderColor: '#FF6410',
+    backgroundColor: '#FFF1E8',
   },
   avatarText: {
-    color: '#D94D08',
+    color: '#A53B08',
     fontSize: 22,
     fontWeight: '900',
   },
@@ -190,7 +280,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     lineHeight: 24,
     fontWeight: '800',
-    marginTop: 13,
+    marginTop: 12,
     textAlign: 'center',
   },
   accountType: {
@@ -198,15 +288,16 @@ const styles = StyleSheet.create({
     fontSize: 13,
     lineHeight: 19,
     marginTop: 3,
+    textAlign: 'center',
   },
   ratingRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 7,
-    marginTop: 11,
+    marginTop: 10,
   },
   stars: {
-    color: '#E9570B',
+    color: '#D94D08',
     fontSize: 18,
     letterSpacing: 1,
   },
@@ -216,22 +307,66 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   section: {
-    marginTop: 24,
+    marginTop: 20,
   },
   sectionTitle: {
     color: '#292929',
     fontSize: 16,
     lineHeight: 22,
     fontWeight: '800',
-    marginBottom: 10,
+    marginBottom: 9,
+  },
+  helperText: {
+    color: '#666666',
+    fontSize: 12,
+    lineHeight: 18,
+  },
+  chipList: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+    marginTop: 10,
+  },
+  chip: {
+    borderRadius: 12,
+    backgroundColor: '#FFF1E8',
+    paddingHorizontal: 10,
+    paddingVertical: 7,
+  },
+  chipText: {
+    color: '#A53B08',
+    fontSize: 12,
+    lineHeight: 16,
+    fontWeight: '700',
+  },
+  locationTitle: {
+    color: '#333333',
+    fontSize: 14,
+    lineHeight: 20,
+    fontWeight: '800',
+    marginBottom: 5,
+  },
+  areaChip: {
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#E2E2E2',
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 10,
+    paddingVertical: 7,
+  },
+  areaChipText: {
+    color: '#555555',
+    fontSize: 12,
+    lineHeight: 16,
+    fontWeight: '600',
   },
   infoCard: {
     borderRadius: 16,
     backgroundColor: '#FFFFFF',
-    paddingHorizontal: 16,
+    paddingHorizontal: 15,
   },
   infoRow: {
-    paddingVertical: 13,
+    paddingVertical: 11,
   },
   infoLabel: {
     color: '#777777',
@@ -250,9 +385,41 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: '#E9E9E9',
   },
-  actions: {
-    gap: 10,
-    marginTop: 24,
+  settingsCard: {
+    borderRadius: 16,
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 14,
+  },
+  settingsAction: {
+    minHeight: 64,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 12,
+  },
+  settingsCopy: {
+    flex: 1,
+    paddingVertical: 10,
+  },
+  settingsLabel: {
+    color: '#333333',
+    fontSize: 13,
+    lineHeight: 18,
+    fontWeight: '700',
+  },
+  settingsDescription: {
+    color: '#777777',
+    fontSize: 11,
+    lineHeight: 16,
+    marginTop: 2,
+  },
+  chevron: {
+    color: '#A53B08',
+    fontSize: 24,
+    fontWeight: '600',
+  },
+  signOutAction: {
+    marginTop: 16,
   },
   modalOverlay: {
     flex: 1,
@@ -262,8 +429,8 @@ const styles = StyleSheet.create({
   },
   modalCard: {
     borderRadius: 18,
-    borderWidth: 1.5,
-    borderColor: '#FF6410',
+    borderWidth: 1,
+    borderColor: '#E5E5E5',
     backgroundColor: '#FFFFFF',
     padding: 20,
   },
@@ -279,5 +446,8 @@ const styles = StyleSheet.create({
     lineHeight: 21,
     marginTop: 10,
     marginBottom: 20,
+  },
+  pressed: {
+    opacity: 0.82,
   },
 });
