@@ -27,6 +27,33 @@ const SERVICES = [
   { label: 'Pintor', icon: '🎨' },
 ];
 
+const VALID_AREA_CODES = new Set([
+  '11', '12', '13', '14', '15', '16', '17', '18', '19',
+  '21', '22', '24', '27', '28',
+  '31', '32', '33', '34', '35', '37', '38',
+  '41', '42', '43', '44', '45', '46', '47', '48', '49',
+  '51', '53', '54', '55',
+  '61', '62', '63', '64', '65', '66', '67', '68', '69',
+  '71', '73', '74', '75', '77', '79',
+  '81', '82', '83', '84', '85', '86', '87', '88', '89',
+  '91', '92', '93', '94', '95', '96', '97', '98', '99',
+]);
+
+function isValidBrazilianPhone(value: string) {
+  const digits = value.replace(/\D/g, '');
+  const areaCode = digits.slice(0, 2);
+  const subscriberNumber = digits.slice(2);
+
+  if (!VALID_AREA_CODES.has(areaCode)) {
+    return false;
+  }
+
+  return (
+    (subscriberNumber.length === 9 && subscriberNumber.startsWith('9')) ||
+    (subscriberNumber.length === 8 && /^[2-5]/.test(subscriberNumber))
+  );
+}
+
 export function RegistrationScreen({
   role,
   onBack,
@@ -38,10 +65,8 @@ export function RegistrationScreen({
   const [submitted, setSubmitted] = useState(false);
   const isContractor = role === 'contratante';
 
-  const phoneDigits = phone.replace(/\D/g, '');
   const nameError = submitted && fullName.trim().length === 0;
-  const phoneError =
-    submitted && phoneDigits.length !== 10 && phoneDigits.length !== 11;
+  const phoneError = submitted && !isValidBrazilianPhone(phone);
   const servicesError = submitted && selectedServices.length === 0;
 
   const toggleService = (service: string) => {
@@ -58,7 +83,7 @@ export function RegistrationScreen({
     setSubmitted(true);
     if (
       fullName.trim().length === 0 ||
-      (phoneDigits.length !== 10 && phoneDigits.length !== 11) ||
+      !isValidBrazilianPhone(phone) ||
       selectedServices.length === 0
     ) {
       return;
