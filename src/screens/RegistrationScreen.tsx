@@ -13,7 +13,8 @@ import {
 import { BrandWordmark } from '../components/BrandWordmark';
 import { PrimaryButton } from '../components/PrimaryButton';
 
-type ProfessionalRegistrationScreenProps = {
+type RegistrationScreenProps = {
+  role: 'trabalhador' | 'contratante';
   onBack: () => void;
   onContinue: () => void;
 };
@@ -26,14 +27,16 @@ const SERVICES = [
   { label: 'Pintor', icon: '🎨' },
 ];
 
-export function ProfessionalRegistrationScreen({
+export function RegistrationScreen({
+  role,
   onBack,
   onContinue,
-}: ProfessionalRegistrationScreenProps) {
+}: RegistrationScreenProps) {
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [submitted, setSubmitted] = useState(false);
+  const isContractor = role === 'contratante';
 
   const phoneDigits = phone.replace(/\D/g, '');
   const nameError = submitted && fullName.trim().length === 0;
@@ -45,7 +48,9 @@ export function ProfessionalRegistrationScreen({
     setSelectedServices((current) =>
       current.includes(service)
         ? current.filter((item) => item !== service)
-        : [...current, service],
+        : isContractor
+          ? [service]
+          : [...current, service],
     );
   };
 
@@ -94,7 +99,9 @@ export function ProfessionalRegistrationScreen({
 
           <View style={styles.heading}>
             <Text style={styles.title}>Vamos criar seu perfil</Text>
-            <Text style={styles.roleTitle}>Profissional</Text>
+            <Text style={styles.roleTitle}>
+              {isContractor ? 'Contratante' : 'Profissional'}
+            </Text>
           </View>
 
           <View style={styles.fields}>
@@ -141,16 +148,28 @@ export function ProfessionalRegistrationScreen({
           </View>
 
           <View style={styles.servicesSection}>
-            <Text style={styles.sectionTitle}>Qual serviço você faz?</Text>
-            <Text style={styles.sectionHint}>Selecione uma ou mais opções.</Text>
+            <Text style={styles.sectionTitle}>
+              {isContractor
+                ? 'Qual serviço você quer contratar?'
+                : 'Qual serviço você faz?'}
+            </Text>
+            <Text style={styles.sectionHint}>
+              {isContractor
+                ? 'Selecione o serviço desejado.'
+                : 'Selecione uma ou mais opções.'}
+            </Text>
             <View style={styles.serviceGrid}>
               {SERVICES.map(({ label, icon }) => {
                 const selected = selectedServices.includes(label);
                 return (
                   <Pressable
                     key={label}
-                    accessibilityRole="checkbox"
-                    accessibilityState={{ checked: selected }}
+                    accessibilityRole={isContractor ? 'radio' : 'checkbox'}
+                    accessibilityState={
+                      isContractor
+                        ? { selected }
+                        : { checked: selected }
+                    }
                     onPress={() => toggleService(label)}
                     style={[
                       styles.serviceCard,
