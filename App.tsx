@@ -9,12 +9,12 @@ import { JobsScreen } from './src/screens/JobsScreen';
 import { LoginScreen } from './src/screens/LoginScreen';
 import { MyJobsScreen } from './src/screens/MyJobsScreen';
 import { ProfileScreen } from './src/screens/ProfileScreen';
-import { ProfessionalRegistrationScreen } from './src/screens/ProfessionalRegistrationScreen';
+import { RegistrationScreen } from './src/screens/RegistrationScreen';
 
 type UserRole = 'trabalhador' | 'contratante';
 type Screen =
   | 'login'
-  | 'professionalRegistration'
+  | 'registration'
   | 'jobs'
   | 'myJobs'
   | 'details'
@@ -29,9 +29,7 @@ export default function App() {
 
   const handleSelectRole = (selectedRole: UserRole) => {
     setRole(selectedRole);
-    setScreen(
-      selectedRole === 'trabalhador' ? 'professionalRegistration' : 'jobs',
-    );
+    setScreen('registration');
   };
 
   const handleSelectJob = (job: Job, origin: 'jobs' | 'myJobs') => {
@@ -51,8 +49,9 @@ export default function App() {
       <SafeAreaView style={styles.app}>
         <StatusBar style="dark" />
         {screen === 'login' && <LoginScreen onContinue={handleSelectRole} />}
-        {screen === 'professionalRegistration' && (
-          <ProfessionalRegistrationScreen
+        {screen === 'registration' && (
+          <RegistrationScreen
+            role={role}
             onBack={() => setScreen('login')}
             onContinue={() => setScreen('jobs')}
           />
