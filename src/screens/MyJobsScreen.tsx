@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BottomNavigation } from '../components/BottomNavigation';
+import { PrimaryButton } from '../components/PrimaryButton';
 import { Job } from '../types';
 
 type MyJobsScreenProps = {
@@ -89,6 +90,7 @@ export function MyJobsScreen({
   onOpenProfile,
 }: MyJobsScreenProps) {
   const [activeTab, setActiveTab] = useState<TabId>('active');
+  const [interestJob, setInterestJob] = useState<MyJob | null>(null);
   const insets = useSafeAreaInsets();
   const jobs = DEMO_JOBS.filter((job) =>
     activeTab === 'active' ? job.status !== 'completed' : job.status === 'completed',
@@ -183,8 +185,8 @@ export function MyJobsScreen({
                 </Pressable>
                 <Pressable
                   accessibilityRole="button"
-                  accessibilityLabel={`Ver detalhes e demonstrar interesse em ${job.title}`}
-                  onPress={() => onSelectJob(job)}
+                  accessibilityLabel={`Demonstrar interesse em ${job.title}`}
+                  onPress={() => setInterestJob(job)}
                   style={({ pressed }) => [styles.interestButton, pressed && styles.pressed]}
                 >
                   <Text style={styles.interestButtonText}>TENHO INTERESSE</Text>
@@ -201,6 +203,41 @@ export function MyJobsScreen({
         onMyJobsPress={() => undefined}
         onProfilePress={onOpenProfile}
       />
+
+      <Modal
+        accessibilityViewIsModal
+        animationType="fade"
+        onRequestClose={() => setInterestJob(null)}
+        transparent
+        visible={interestJob !== null}
+      >
+        <View style={styles.modalOverlay}>
+          <View accessibilityRole="alert" style={styles.modalCard}>
+            <View style={styles.successMark}>
+              <Text style={styles.successCheck}>✓</Text>
+            </View>
+            <Text accessibilityRole="header" style={styles.modalTitle}>
+              Interesse registrado
+            </Text>
+            <Text style={styles.modalMessage}>
+              Seu interesse em{' '}
+              <Text style={styles.modalJobTitle}>{interestJob?.title}</Text> foi registrado nesta
+              demonstração.
+            </Text>
+            <Text style={styles.modalNote}>
+              A contratante ainda não foi notificada. O envio de candidaturas não está conectado
+              ao backend.
+            </Text>
+            <PrimaryButton
+              title="Voltar ao mural"
+              onPress={() => {
+                setInterestJob(null);
+                onOpenJobs();
+              }}
+            />
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -437,5 +474,65 @@ const styles = StyleSheet.create({
   },
   pressed: {
     opacity: 0.82,
+  },
+  modalOverlay: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(23, 23, 23, 0.64)',
+    paddingHorizontal: 24,
+  },
+  modalCard: {
+    width: '100%',
+    maxWidth: 400,
+    alignItems: 'center',
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#E4E4E4',
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 22,
+    paddingTop: 26,
+    paddingBottom: 22,
+  },
+  successMark: {
+    width: 60,
+    height: 60,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 30,
+    backgroundColor: '#FF6410',
+    marginBottom: 16,
+  },
+  successCheck: {
+    color: '#FFFFFF',
+    fontSize: 30,
+    lineHeight: 40,
+    fontWeight: '900',
+  },
+  modalTitle: {
+    color: '#171717',
+    fontSize: 21,
+    lineHeight: 28,
+    fontWeight: '900',
+    textAlign: 'center',
+  },
+  modalMessage: {
+    color: '#5A5A5A',
+    fontSize: 14,
+    lineHeight: 21,
+    textAlign: 'center',
+    marginTop: 10,
+  },
+  modalJobTitle: {
+    color: '#333333',
+    fontWeight: '800',
+  },
+  modalNote: {
+    color: '#777777',
+    fontSize: 12,
+    lineHeight: 18,
+    textAlign: 'center',
+    marginTop: 10,
+    marginBottom: 20,
   },
 });
