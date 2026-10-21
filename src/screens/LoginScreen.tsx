@@ -10,7 +10,7 @@ type LoginScreenProps = {
 export function LoginScreen({ onContinue }: LoginScreenProps) {
   return (
     <LinearGradient
-      colors={['#FF4F00', '#FF7900', '#FFB51B']}
+      colors={['#FF4F00', '#FF7900', '#FFE956']}
       locations={[0, 0.56, 1]}
       start={{ x: 0.5, y: 0 }}
       end={{ x: 0.5, y: 1 }}
@@ -21,15 +21,21 @@ export function LoginScreen({ onContinue }: LoginScreenProps) {
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.brand}>
-          <Text style={styles.brandText}>
-            BICO<Text style={styles.brandAccent}>JÁ</Text>
-          </Text>
+          <View
+            accessibilityLabel="Bico Já"
+            accessible
+            style={styles.brandWordmark}
+          >
+            <OutlinedWord text="BICO" color="#FFFFFF" />
+            <OutlinedWord text="JÁ" color="#FF6410" />
+          </View>
         </View>
 
         <View style={styles.intro}>
-          <Text style={styles.eyebrow}>CONECTANDO QUEM FAZ ACONTECER</Text>
-          <Text style={styles.title}>Vamos criar seu perfil</Text>
-          <Text style={styles.subtitle}>Escolha seu perfil para continuar</Text>
+          <Text style={styles.eyebrow}>
+            Conectando com quem faz com quem precisa.
+          </Text>
+          <Text style={styles.subtitle}>Como você quer usar o app?</Text>
         </View>
 
         <View style={styles.profileOptions}>
@@ -43,8 +49,10 @@ export function LoginScreen({ onContinue }: LoginScreenProps) {
               <Text style={styles.profileEmoji}>👷</Text>
             </View>
             <View style={styles.profileCopy}>
-              <Text style={styles.profileTitle}>Quero trabalhar</Text>
-              <Text style={styles.profileDescription}>Encontre um bico perto de você</Text>
+              <Text style={styles.profileTitle}>Quero TRABALHAR</Text>
+              <Text style={styles.profileDescription}>
+                Sou profissional da construção
+              </Text>
             </View>
             <Text accessibilityElementsHidden style={styles.arrow}>›</Text>
           </Pressable>
@@ -59,8 +67,10 @@ export function LoginScreen({ onContinue }: LoginScreenProps) {
               <Text style={styles.profileEmoji}>🏗️</Text>
             </View>
             <View style={styles.profileCopy}>
-              <Text style={styles.profileTitle}>Quero contratar</Text>
-              <Text style={styles.profileDescription}>Encontre profissionais para sua obra</Text>
+              <Text style={styles.profileTitle}>Quero CONTRATAR</Text>
+              <Text style={styles.profileDescription}>
+                Quero contratar um profissional
+              </Text>
             </View>
             <Text accessibilityElementsHidden style={styles.arrow}>›</Text>
           </Pressable>
@@ -72,6 +82,98 @@ export function LoginScreen({ onContinue }: LoginScreenProps) {
   );
 }
 
+type OutlinedWordProps = {
+  text: string;
+  color: string;
+};
+
+const OUTLINE_DIRECTIONS = [
+  { x: -1, y: -1 },
+  { x: 0, y: -1 },
+  { x: 1, y: -1 },
+  { x: -1, y: 0 },
+  { x: 1, y: 0 },
+  { x: -1, y: 1 },
+  { x: 0, y: 1 },
+  { x: 1, y: 1 },
+];
+
+const createOutlineOffsets = (radii: number[]) =>
+  radii.flatMap((radius) =>
+    OUTLINE_DIRECTIONS.map(({ x, y }) => ({ x: x * radius, y: y * radius })),
+  );
+
+const DARK_OUTLINE_OFFSETS = createOutlineOffsets([3, 4]);
+const LIGHT_OUTLINE_OFFSETS = createOutlineOffsets([1, 2]);
+const WORDMARK_INSET = 6;
+
+function OutlinedWord({ text, color }: OutlinedWordProps) {
+  return (
+    <View style={styles.outlinedWord}>
+      <Text style={[styles.wordText, styles.wordSpacer]}>{text}</Text>
+      <Text
+        accessibilityElementsHidden
+        importantForAccessibility="no-hide-descendants"
+        style={[
+          styles.wordText,
+          styles.wordLayer,
+          styles.wordShadow,
+          { color: '#0B2348' },
+        ]}
+      >
+        {text}
+      </Text>
+      {DARK_OUTLINE_OFFSETS.map(({ x, y }, index) => (
+        <Text
+          key={`dark-${index}`}
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
+          style={[
+            styles.wordText,
+            styles.wordLayer,
+            {
+              color: '#12366B',
+              left: WORDMARK_INSET + x,
+              top: WORDMARK_INSET + y,
+            },
+          ]}
+        >
+          {text}
+        </Text>
+      ))}
+      {LIGHT_OUTLINE_OFFSETS.map(({ x, y }, index) => (
+        <Text
+          key={`light-${index}`}
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
+          style={[
+            styles.wordText,
+            styles.wordLayer,
+            {
+              color: '#55C9F2',
+              left: WORDMARK_INSET + x,
+              top: WORDMARK_INSET + y,
+            },
+          ]}
+        >
+          {text}
+        </Text>
+      ))}
+      <Text
+        accessibilityElementsHidden
+        importantForAccessibility="no-hide-descendants"
+        style={[
+          styles.wordText,
+          styles.wordLayer,
+          { color, left: WORDMARK_INSET, top: WORDMARK_INSET },
+        ]}
+      >
+        {text}
+      </Text>
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
   gradient: {
     flex: 1,
@@ -80,64 +182,74 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: 'center',
     paddingHorizontal: 24,
-    paddingTop: 48,
-    paddingBottom: 30,
+    paddingTop: 52,
+    paddingBottom: 24,
   },
   brand: {
+    width: '100%',
     alignItems: 'center',
-    marginBottom: 30,
+    marginBottom: 20,
   },
-  brandText: {
-    color: '#FFFFFF',
-    fontSize: 34,
-    lineHeight: 42,
+  brandWordmark: {
+    width: '100%',
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    overflow: 'visible',
+  },
+  outlinedWord: {
+    position: 'relative',
+    marginHorizontal: -4,
+  },
+  wordText: {
+    fontSize: 40,
+    lineHeight: 50,
     letterSpacing: 0.4,
     fontWeight: '900',
-    textShadowColor: '#173D7A',
-    textShadowOffset: { width: 2, height: 2 },
-    textShadowRadius: 1,
   },
-  brandAccent: {
-    color: '#FFFFFF',
+  wordSpacer: {
+    opacity: 0,
+    paddingHorizontal: WORDMARK_INSET,
+    paddingVertical: WORDMARK_INSET,
+  },
+  wordLayer: {
+    position: 'absolute',
+    left: WORDMARK_INSET,
+    top: WORDMARK_INSET,
+  },
+  wordShadow: {
+    transform: [{ translateX: 2 }, { translateY: 3 }],
   },
   intro: {
     alignItems: 'center',
-    marginBottom: 22,
+    marginBottom: 20,
   },
   eyebrow: {
-    color: '#FFF1D4',
-    fontSize: 11,
-    letterSpacing: 1.8,
-    fontWeight: '800',
-    marginBottom: 8,
-  },
-  title: {
     color: '#FFFFFF',
     textAlign: 'center',
-    fontSize: 25,
-    lineHeight: 32,
-    fontWeight: '900',
+    fontSize: 15,
+    lineHeight: 20,
+    fontWeight: '700',
   },
   subtitle: {
     color: '#FFFFFF',
     textAlign: 'center',
-    fontSize: 14,
-    lineHeight: 20,
-    fontWeight: '600',
-    marginTop: 8,
+    fontSize: 16,
+    lineHeight: 22,
+    fontWeight: '800',
+    marginTop: 12,
   },
   profileOptions: {
     gap: 12,
   },
   profileCard: {
-    minHeight: 100,
+    minHeight: 108,
     flexDirection: 'row',
     alignItems: 'center',
-    borderRadius: 18,
-    borderWidth: 2,
+    borderRadius: 20,
     borderColor: '#FFFFFF',
     backgroundColor: '#FFFFFF',
-    padding: 12,
+    padding: 10,
     shadowColor: '#8F3300',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.16,
@@ -146,10 +258,10 @@ const styles = StyleSheet.create({
   },
   profileIllustration: {
     width: 68,
-    height: 68,
+    height: 72,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 17,
+    borderRadius: 16,
     backgroundColor: '#FFF0D8',
   },
   contractorIllustration: {
@@ -160,19 +272,20 @@ const styles = StyleSheet.create({
   },
   profileCopy: {
     flex: 1,
-    marginLeft: 14,
+    marginLeft: 12,
   },
   profileTitle: {
-    color: '#A73C0D',
+    color: '#E26B25',
     fontSize: 16,
-    lineHeight: 22,
-    fontWeight: '900',
+    lineHeight: 21,
+    fontWeight: '800',
   },
   profileDescription: {
     color: '#75503D',
     fontSize: 12,
-    lineHeight: 17,
-    marginTop: 3,
+    lineHeight: 16,
+    fontWeight: '600',
+    marginTop: 4,
   },
   arrow: {
     color: '#E9500A',
