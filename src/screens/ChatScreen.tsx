@@ -8,6 +8,7 @@ import {
   Text,
   TextInput,
   View,
+  type ScrollViewInstance,
 } from 'react-native';
 import { BottomNavigation } from '../components/BottomNavigation';
 import { Job } from '../types';
@@ -35,7 +36,7 @@ export function ChatScreen({
   const [draft, setDraft] = useState('');
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const nextMessageId = useRef(0);
-  const messageListRef = useRef<ScrollView>(null);
+  const messageListRef = useRef<ScrollViewInstance | null>(null);
 
   const sendMessage = () => {
     const text = draft.trim();

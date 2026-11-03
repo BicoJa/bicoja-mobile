@@ -24,6 +24,7 @@ type Screen =
 export default function App() {
   const [screen, setScreen] = useState<Screen>('login');
   const [role, setRole] = useState<UserRole>('trabalhador');
+  const [userName, setUserName] = useState('');
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
   const [detailsOrigin, setDetailsOrigin] = useState<'jobs' | 'myJobs'>('jobs');
 
@@ -53,12 +54,16 @@ export default function App() {
           <RegistrationScreen
             role={role}
             onBack={() => setScreen('login')}
-            onContinue={() => setScreen('jobs')}
+            onContinue={(name) => {
+              setUserName(name);
+              setScreen('jobs');
+            }}
           />
         )}
         {screen === 'jobs' && (
           <JobsScreen
             role={role}
+            userName={userName}
             onSelectJob={(job) => handleSelectJob(job, 'jobs')}
             onOpenMyJobs={() => setScreen('myJobs')}
             onOpenProfile={() => setScreen('profile')}

@@ -10,6 +10,7 @@ type UserRole = 'trabalhador' | 'contratante';
 
 type JobsScreenProps = {
   role: UserRole;
+  userName: string;
   onSelectJob: (job: Job) => void;
   onOpenMyJobs: () => void;
   onOpenProfile: () => void;
@@ -17,6 +18,7 @@ type JobsScreenProps = {
 
 export function JobsScreen({
   role,
+  userName,
   onSelectJob,
   onOpenMyJobs,
   onOpenProfile,
@@ -55,11 +57,8 @@ export function JobsScreen({
         <View style={styles.hero}>
           <View style={styles.topBar}>
             <Text accessibilityLabel="Bico Já" style={styles.brand}>BICO<Text style={styles.brandAccent}>JÁ</Text></Text>
-            <View style={styles.topIcons}>
-              <Text accessibilityLabel="Menu" style={styles.topIcon}>☰</Text>
-            </View>
           </View>
-          <Text style={styles.greeting}>Olá, José!</Text>
+          <Text style={styles.greeting}>Olá, {userName}!</Text>
           <Text style={styles.subtitle}>
             {role === 'trabalhador'
               ? 'Pronto para encontrar sua próxima oportunidade?'
@@ -156,16 +155,6 @@ const styles = StyleSheet.create({
   },
   brandAccent: {
     color: '#193C83',
-  },
-  topIcons: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 18,
-  },
-  topIcon: {
-    color: '#FFFFFF',
-    fontSize: 22,
-    fontWeight: '700',
   },
   greeting: {
     color: '#FFFFFF',
