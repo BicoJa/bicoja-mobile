@@ -7,7 +7,6 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   View,
 } from 'react-native';
 import { BrandWordmark } from '../components/BrandWordmark';
@@ -16,7 +15,7 @@ import { PrimaryButton } from '../components/PrimaryButton';
 type RegistrationScreenProps = {
   role: 'trabalhador' | 'contratante';
   onBack: () => void;
-  onContinue: (fullName: string) => void;
+  onContinue: () => void;
 };
 
 const SERVICES = [
@@ -27,46 +26,15 @@ const SERVICES = [
   { label: 'Pintor', icon: '🎨' },
 ];
 
-const VALID_AREA_CODES = new Set([
-  '11', '12', '13', '14', '15', '16', '17', '18', '19',
-  '21', '22', '24', '27', '28',
-  '31', '32', '33', '34', '35', '37', '38',
-  '41', '42', '43', '44', '45', '46', '47', '48', '49',
-  '51', '53', '54', '55',
-  '61', '62', '63', '64', '65', '66', '67', '68', '69',
-  '71', '73', '74', '75', '77', '79',
-  '81', '82', '83', '84', '85', '86', '87', '88', '89',
-  '91', '92', '93', '94', '95', '96', '97', '98', '99',
-]);
-
-function isValidBrazilianPhone(value: string) {
-  const digits = value.replace(/\D/g, '');
-  const areaCode = digits.slice(0, 2);
-  const subscriberNumber = digits.slice(2);
-
-  if (!VALID_AREA_CODES.has(areaCode)) {
-    return false;
-  }
-
-  return (
-    (subscriberNumber.length === 9 && subscriberNumber.startsWith('9')) ||
-    (subscriberNumber.length === 8 && /^[2-5]/.test(subscriberNumber))
-  );
-}
-
 export function RegistrationScreen({
   role,
   onBack,
   onContinue,
 }: RegistrationScreenProps) {
-  const [fullName, setFullName] = useState('');
-  const [phone, setPhone] = useState('');
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [submitted, setSubmitted] = useState(false);
   const isContractor = role === 'contratante';
 
-  const nameError = submitted && fullName.trim().length === 0;
-  const phoneError = submitted && !isValidBrazilianPhone(phone);
   const servicesError = submitted && selectedServices.length === 0;
 
   const toggleService = (service: string) => {
@@ -81,14 +49,10 @@ export function RegistrationScreen({
 
   const handleContinue = () => {
     setSubmitted(true);
-    if (
-      fullName.trim().length === 0 ||
-      !isValidBrazilianPhone(phone) ||
-      selectedServices.length === 0
-    ) {
+    if (selectedServices.length === 0) {
       return;
     }
-    onContinue(fullName.trim());
+    onContinue();
   };
 
   return (
@@ -127,49 +91,6 @@ export function RegistrationScreen({
             <Text style={styles.roleTitle}>
               {isContractor ? 'Contratante' : 'Profissional'}
             </Text>
-          </View>
-
-          <View style={styles.fields}>
-            <View style={styles.field}>
-              <Text style={styles.label}>Nome Completo</Text>
-              <TextInput
-                accessibilityLabel="Nome Completo"
-                autoCapitalize="words"
-                autoComplete="name"
-                onChangeText={setFullName}
-                placeholder="Digite seu nome completo"
-                placeholderTextColor="#8A786D"
-                returnKeyType="next"
-                style={[styles.input, nameError && styles.inputError]}
-                value={fullName}
-              />
-              {nameError && (
-                <Text accessibilityRole="alert" style={styles.errorText}>
-                  Informe seu nome completo.
-                </Text>
-              )}
-            </View>
-
-            <View style={styles.field}>
-              <Text style={styles.label}>Telefone</Text>
-              <TextInput
-                accessibilityLabel="Telefone"
-                autoComplete="tel"
-                keyboardType="phone-pad"
-                maxLength={16}
-                onChangeText={setPhone}
-                placeholder="(83) 99999-9999"
-                placeholderTextColor="#8A786D"
-                returnKeyType="done"
-                style={[styles.input, phoneError && styles.inputError]}
-                value={phone}
-              />
-              {phoneError && (
-                <Text accessibilityRole="alert" style={styles.errorText}>
-                  Informe um telefone válido com DDD.
-                </Text>
-              )}
-            </View>
           </View>
 
           <View style={styles.servicesSection}>
@@ -275,30 +196,6 @@ const styles = StyleSheet.create({
     fontWeight: '900',
     textAlign: 'center',
     marginTop: 2,
-  },
-  fields: {
-    gap: 12,
-  },
-  field: {
-    gap: 6,
-  },
-  label: {
-    color: '#FFFFFF',
-    fontSize: 14,
-    fontWeight: '700',
-  },
-  input: {
-    minHeight: 48,
-    borderRadius: 14,
-    borderWidth: 1,
-    borderColor: '#FFFFFF',
-    backgroundColor: '#FFFFFF',
-    color: '#3D2A20',
-    fontSize: 15,
-    paddingHorizontal: 14,
-  },
-  inputError: {
-    borderColor: '#9F1D13',
   },
   errorText: {
     color: '#FFFFFF',

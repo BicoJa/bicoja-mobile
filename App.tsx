@@ -54,8 +54,8 @@ export default function App() {
           <RegistrationScreen
             role={role}
             onBack={() => setScreen('login')}
-            onContinue={(name) => {
-              setUserName(name);
+            onContinue={() => {
+              setUserName(role === 'trabalhador' ? 'profissional' : 'cliente');
               setScreen('jobs');
             }}
           />
