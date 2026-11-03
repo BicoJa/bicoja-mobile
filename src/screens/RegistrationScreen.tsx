@@ -15,7 +15,7 @@ import { PrimaryButton } from '../components/PrimaryButton';
 type RegistrationScreenProps = {
   role: 'trabalhador' | 'contratante';
   onBack: () => void;
-  onContinue: () => void;
+  onContinue: (selectedServices: string[]) => void;
 };
 
 const SERVICES = [
@@ -52,7 +52,7 @@ export function RegistrationScreen({
     if (selectedServices.length === 0) {
       return;
     }
-    onContinue();
+    onContinue(selectedServices);
   };
 
   return (

@@ -5,6 +5,7 @@ import { PrimaryButton } from '../components/PrimaryButton';
 
 type ProfileScreenProps = {
   role: 'trabalhador' | 'contratante';
+  profession: string;
   onOpenJobs: () => void;
   onOpenMyJobs: () => void;
   onSignOut: () => void;
@@ -12,11 +13,9 @@ type ProfileScreenProps = {
 
 type ProfileAction = 'edit' | 'privacy' | 'terms' | null;
 
-const SPECIALTIES = ['Alvenaria', 'Reparos', 'Assentamento de revestimentos'];
-const SERVICE_AREAS = ['Manaíra', 'Tambaú', 'Bancários', 'Mangabeira'];
-
 export function ProfileScreen({
   role,
+  profession,
   onOpenJobs,
   onOpenMyJobs,
   onSignOut,
@@ -38,45 +37,13 @@ export function ProfileScreen({
             <Text style={styles.avatarText}>{isWorker ? 'PS' : 'CL'}</Text>
           </View>
           <Text style={styles.name}>
-            {isWorker ? 'Prestador de serviços' : 'Cliente Bico Já'}
-          </Text>
-          <Text style={styles.accountType}>
-            {isWorker ? 'Profissional da construção civil' : 'Conta de cliente'}
+            {isWorker ? profession : 'Cliente Bico Já'}
           </Text>
           <View style={styles.ratingRow}>
             <Text accessibilityLabel="Ainda sem avaliações" style={styles.stars}>☆☆☆☆☆</Text>
             <Text style={styles.ratingText}>Sem avaliações</Text>
           </View>
         </View>
-
-        {isWorker && (
-          <>
-            <ProfileSection title="Especialidades">
-              <Text style={styles.helperText}>
-                Especialidades demonstrativas. Edite o perfil para informar suas áreas de atuação.
-              </Text>
-              <View style={styles.chipList}>
-                {SPECIALTIES.map((specialty) => (
-                  <View key={specialty} style={styles.chip}>
-                    <Text style={styles.chipText}>{specialty}</Text>
-                  </View>
-                ))}
-              </View>
-            </ProfileSection>
-
-            <ProfileSection title="Zona de atuação">
-              <Text style={styles.locationTitle}>João Pessoa, PB</Text>
-              <Text style={styles.helperText}>Bairros demonstrativos:</Text>
-              <View style={styles.chipList}>
-                {SERVICE_AREAS.map((area) => (
-                  <View key={area} style={styles.areaChip}>
-                    <Text style={styles.areaChipText}>{area}</Text>
-                  </View>
-                ))}
-              </View>
-            </ProfileSection>
-          </>
-        )}
 
         <ProfileSection title="Dados da conta">
           <View style={styles.infoCard}>
@@ -85,8 +52,6 @@ export function ProfileScreen({
             <ProfileInfo label="E-mail" value="Não informado" />
             <View style={styles.divider} />
             <ProfileInfo label="Telemóvel" value="Não informado" />
-            <View style={styles.divider} />
-            <ProfileInfo label="Localização" value="João Pessoa, PB" />
           </View>
         </ProfileSection>
 
@@ -94,7 +59,7 @@ export function ProfileScreen({
           <View style={styles.settingsCard}>
             <SettingsAction
               label="Editar perfil"
-              description="Atualize os seus dados e especialidades"
+              description="Atualize os seus dados de perfil"
               onPress={() => setActiveAction('edit')}
             />
             <View style={styles.divider} />
@@ -283,13 +248,6 @@ const styles = StyleSheet.create({
     marginTop: 12,
     textAlign: 'center',
   },
-  accountType: {
-    color: '#666666',
-    fontSize: 13,
-    lineHeight: 19,
-    marginTop: 3,
-    textAlign: 'center',
-  },
   ratingRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -315,50 +273,6 @@ const styles = StyleSheet.create({
     lineHeight: 22,
     fontWeight: '800',
     marginBottom: 9,
-  },
-  helperText: {
-    color: '#666666',
-    fontSize: 12,
-    lineHeight: 18,
-  },
-  chipList: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-    marginTop: 10,
-  },
-  chip: {
-    borderRadius: 12,
-    backgroundColor: '#FFF1E8',
-    paddingHorizontal: 10,
-    paddingVertical: 7,
-  },
-  chipText: {
-    color: '#A53B08',
-    fontSize: 12,
-    lineHeight: 16,
-    fontWeight: '700',
-  },
-  locationTitle: {
-    color: '#333333',
-    fontSize: 14,
-    lineHeight: 20,
-    fontWeight: '800',
-    marginBottom: 5,
-  },
-  areaChip: {
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: '#E2E2E2',
-    backgroundColor: '#FFFFFF',
-    paddingHorizontal: 10,
-    paddingVertical: 7,
-  },
-  areaChipText: {
-    color: '#555555',
-    fontSize: 12,
-    lineHeight: 16,
-    fontWeight: '600',
   },
   infoCard: {
     borderRadius: 16,
