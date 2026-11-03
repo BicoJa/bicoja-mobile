@@ -14,7 +14,6 @@ const DEMO_JOBS: Job[] = [
       'Vaga para pedreiro com experiência em alvenaria. Obra organizada e início imediato. O valor será definido após visita e orçamento no local.',
     benefits: ['Almoço no local'],
     requirements: ['Experiência em alvenaria'],
-    tools: ['Ferramentas fornecidas na obra'],
     postedAt: 'Há 25 min',
     imageUrl:
       'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=900&q=80',
