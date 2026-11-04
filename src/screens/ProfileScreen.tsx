@@ -13,8 +13,6 @@ type ProfileScreenProps = {
 
 type ProfileAction = 'edit' | 'privacy' | 'terms' | null;
 
-const SERVICE_AREAS = ['Manaíra', 'Tambaú', 'Bancários', 'Mangabeira'];
-
 export function ProfileScreen({
   role,
   profession,
@@ -46,18 +44,6 @@ export function ProfileScreen({
             <Text style={styles.ratingText}>Sem avaliações</Text>
           </View>
         </View>
-
-        <ProfileSection title="Zona de atuação">
-          <Text style={styles.locationTitle}>João Pessoa, PB</Text>
-          <Text style={styles.helperText}>Bairros demonstrativos:</Text>
-          <View style={styles.chipList}>
-            {SERVICE_AREAS.map((area) => (
-              <View key={area} style={styles.areaChip}>
-                <Text style={styles.areaChipText}>{area}</Text>
-              </View>
-            ))}
-          </View>
-        </ProfileSection>
 
         <ProfileSection title="Dados da conta">
           <View style={styles.infoCard}>
@@ -285,38 +271,6 @@ const styles = StyleSheet.create({
     lineHeight: 22,
     fontWeight: '800',
     marginBottom: 9,
-  },
-  helperText: {
-    color: '#666666',
-    fontSize: 12,
-    lineHeight: 18,
-  },
-  chipList: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-    marginTop: 10,
-  },
-  locationTitle: {
-    color: '#333333',
-    fontSize: 14,
-    lineHeight: 20,
-    fontWeight: '800',
-    marginBottom: 5,
-  },
-  areaChip: {
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: '#E2E2E2',
-    backgroundColor: '#FFFFFF',
-    paddingHorizontal: 10,
-    paddingVertical: 7,
-  },
-  areaChipText: {
-    color: '#555555',
-    fontSize: 12,
-    lineHeight: 16,
-    fontWeight: '600',
   },
   infoCard: {
     borderRadius: 16,

@@ -15,28 +15,6 @@ type JobDetailsScreenProps = {
   activeNavigation: 'jobs' | 'myJobs';
 };
 
-type DetailListProps = {
-  items: string[];
-  emptyMessage: string;
-};
-
-function DetailList({ items, emptyMessage }: DetailListProps) {
-  if (items.length === 0) {
-    return <Text style={styles.body}>{emptyMessage}</Text>;
-  }
-
-  return (
-    <View style={styles.detailList}>
-      {items.map((item, index) => (
-        <View key={`${item}-${index}`} style={styles.detailItem}>
-          <Text style={styles.bullet}>•</Text>
-          <Text style={styles.body}>{item}</Text>
-        </View>
-      ))}
-    </View>
-  );
-}
-
 export function JobDetailsScreen({
   job,
   onBack,
@@ -46,8 +24,6 @@ export function JobDetailsScreen({
   activeNavigation,
 }: JobDetailsScreenProps) {
   const [successVisible, setSuccessVisible] = useState(false);
-  const requirements = job.requirements ?? [];
-  const tools = job.tools ?? [];
 
   return (
     <View style={styles.screen}>
@@ -115,25 +91,6 @@ export function JobDetailsScreen({
               Combine os detalhes do atendimento com o cliente após a visita técnica.
             </Text>
           </JobDetailSection>
-
-          <JobDetailSection title="Requisitos e ferramentas">
-            <Text style={styles.subsectionTitle}>Requisitos</Text>
-            <DetailList
-              items={requirements}
-              emptyMessage="Consulte a contratante sobre os requisitos desta oportunidade."
-            />
-            <Text style={styles.subsectionTitle}>Ferramentas e materiais</Text>
-            <DetailList
-              items={tools}
-              emptyMessage="Confirme com a contratante se é necessário levar ferramentas ou materiais."
-            />
-          </JobDetailSection>
-
-          {job.benefits.length > 0 && (
-            <JobDetailSection title="O que está incluído">
-              <DetailList items={job.benefits} emptyMessage="" />
-            </JobDetailSection>
-          )}
 
           <View style={styles.application}>
             <PrimaryButton
@@ -324,21 +281,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 17,
     fontWeight: '800',
-  },
-  detailList: {
-    gap: 7,
-    marginBottom: 6,
-  },
-  detailItem: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: 8,
-  },
-  bullet: {
-    color: '#FF6410',
-    fontSize: 18,
-    lineHeight: 21,
-    fontWeight: '900',
   },
   application: {
     marginTop: 22,
