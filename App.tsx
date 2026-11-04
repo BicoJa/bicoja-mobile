@@ -25,6 +25,7 @@ export default function App() {
   const [screen, setScreen] = useState<Screen>('login');
   const [role, setRole] = useState<UserRole>('trabalhador');
   const [userName, setUserName] = useState('');
+  const [profession, setProfession] = useState('Profissional');
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
   const [detailsOrigin, setDetailsOrigin] = useState<'jobs' | 'myJobs'>('jobs');
 
@@ -54,8 +55,11 @@ export default function App() {
           <RegistrationScreen
             role={role}
             onBack={() => setScreen('login')}
-            onContinue={() => {
+            onContinue={(selectedServices) => {
               setUserName(role === 'trabalhador' ? 'profissional' : 'cliente');
+              if (role === 'trabalhador') {
+                setProfession(selectedServices.join(', '));
+              }
               setScreen('jobs');
             }}
           />
@@ -99,6 +103,7 @@ export default function App() {
         {screen === 'profile' && (
           <ProfileScreen
             role={role}
+            profession={profession}
             onOpenJobs={() => setScreen('jobs')}
             onOpenMyJobs={() => setScreen('myJobs')}
             onSignOut={() => setScreen('login')}
