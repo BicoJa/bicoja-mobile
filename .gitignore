@@ -39,3 +39,13 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+# Java / Maven - Backend
+backend/target/
+backend/data/
+backend/*.mv.db
+backend/*.trace.db
+
+# IDE
+backend/.idea/
+backend/*.iml
