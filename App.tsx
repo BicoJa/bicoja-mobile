@@ -12,6 +12,7 @@ import { ProfileScreen } from './src/screens/ProfileScreen';
 import { RegistrationScreen } from './src/screens/RegistrationScreen';
 
 type UserRole = 'trabalhador' | 'contratante';
+
 type Screen =
   | 'login'
   | 'registration'
@@ -25,6 +26,7 @@ export default function App() {
   const [screen, setScreen] = useState<Screen>('login');
   const [role, setRole] = useState<UserRole>('trabalhador');
   const [userName, setUserName] = useState('');
+  const [userId, setUserId] = useState<number | null>(null);
   const [profession, setProfession] = useState('Profissional');
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
   const [detailsOrigin, setDetailsOrigin] = useState<'jobs' | 'myJobs'>('jobs');
@@ -50,29 +52,41 @@ export default function App() {
     <SafeAreaProvider>
       <SafeAreaView style={styles.app}>
         <StatusBar style="dark" />
-        {screen === 'login' && <LoginScreen onContinue={handleSelectRole} />}
+
+        {screen === 'login' && (
+          <LoginScreen onContinue={handleSelectRole} />
+        )}
+
         {screen === 'registration' && (
           <RegistrationScreen
             role={role}
             onBack={() => setScreen('login')}
             onContinue={(selectedServices) => {
-              setUserName(role === 'trabalhador' ? 'profissional' : 'cliente');
               if (role === 'trabalhador') {
+                setUserId(2);
+                setUserName('João Santos');
                 setProfession(selectedServices.join(', '));
+              } else {
+                setUserId(3);
+                setUserName('Pedro Oliveira');
               }
+
               setScreen('jobs');
             }}
           />
         )}
+
         {screen === 'jobs' && (
           <JobsScreen
             role={role}
+            userId={userId}
             userName={userName}
             onSelectJob={(job) => handleSelectJob(job, 'jobs')}
             onOpenMyJobs={() => setScreen('myJobs')}
             onOpenProfile={() => setScreen('profile')}
           />
         )}
+
         {screen === 'myJobs' && (
           <MyJobsScreen
             onSelectJob={(job: Job) => handleSelectJob(job, 'myJobs')}
@@ -81,9 +95,11 @@ export default function App() {
             onOpenProfile={() => setScreen('profile')}
           />
         )}
+
         {screen === 'details' && selectedJob && (
           <JobDetailsScreen
             job={selectedJob}
+            userId={userId}
             onBack={() => setScreen(detailsOrigin)}
             onOpenMyJobs={() => setScreen('myJobs')}
             onOpenProfile={() => setScreen('profile')}
@@ -91,6 +107,7 @@ export default function App() {
             activeNavigation={detailsOrigin}
           />
         )}
+
         {screen === 'chat' && selectedJob && (
           <ChatScreen
             job={selectedJob}
@@ -100,6 +117,7 @@ export default function App() {
             onOpenProfile={() => setScreen('profile')}
           />
         )}
+
         {screen === 'profile' && (
           <ProfileScreen
             role={role}

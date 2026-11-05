@@ -1,13 +1,24 @@
 import { useState } from 'react';
-import { Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import {
+  Alert,
+  Image,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  ActivityIndicator,
+} from 'react-native';
+
 import { BottomNavigation } from '../components/BottomNavigation';
 import { JobDetailSection } from '../components/JobDetailSection';
 import { PrimaryButton } from '../components/PrimaryButton';
-import { VisitRequestModal } from '../components/VisitRequestModal';
 import { Job } from '../types';
+import { criarCandidatura } from '../services/api';
 
 type JobDetailsScreenProps = {
   job: Job;
+  userId: number | null;
   onBack: () => void;
   onOpenMyJobs: () => void;
   onOpenProfile: () => void;
@@ -17,13 +28,54 @@ type JobDetailsScreenProps = {
 
 export function JobDetailsScreen({
   job,
+  userId,
   onBack,
   onOpenMyJobs,
   onOpenProfile,
   onOpenChat,
   activeNavigation,
 }: JobDetailsScreenProps) {
-  const [successVisible, setSuccessVisible] = useState(false);
+  const [sending, setSending] = useState(false);
+
+  const handleApply = async () => {
+    if (userId === null) {
+      Alert.alert(
+        'Erro',
+        'Não foi possível identificar seu usuário.',
+      );
+      return;
+    }
+
+    const idVaga = Number(job.id);
+
+    if (!Number.isInteger(idVaga) || idVaga <= 0) {
+      Alert.alert(
+        'Erro',
+        'O identificador da vaga é inválido.',
+      );
+      return;
+    }
+
+    try {
+      setSending(true);
+
+      await criarCandidatura(idVaga, userId);
+
+      Alert.alert(
+        'Candidatura enviada!',
+        'Sua candidatura foi registrada com sucesso. Agora é só aguardar a resposta do contratante.',
+      );
+    } catch (error) {
+      Alert.alert(
+        'Não foi possível se candidatar',
+        error instanceof Error
+          ? error.message
+          : 'Ocorreu um erro inesperado. Tente novamente.',
+      );
+    } finally {
+      setSending(false);
+    }
+  };
 
   return (
     <View style={styles.screen}>
@@ -37,66 +89,122 @@ export function JobDetailsScreen({
               accessibilityRole="button"
               accessibilityLabel="Voltar para o mural de vagas"
               onPress={onBack}
-              style={({ pressed }) => [styles.backButton, pressed && styles.pressed]}
+              style={({ pressed }) => [
+                styles.backButton,
+                pressed && styles.pressed,
+              ]}
             >
               <Text style={styles.backText}>‹</Text>
             </Pressable>
-            <Text style={styles.headerTitle}>Detalhes do serviço</Text>
+
+            <Text style={styles.headerTitle}>
+              Detalhes do serviço
+            </Text>
+
             <View style={styles.headerSpacer} />
           </View>
 
-          <Text style={styles.category}>{job.category}</Text>
-          <Text style={styles.title}>{job.title}</Text>
+          <Text style={styles.category}>
+            {job.category}
+          </Text>
+
+          <Text style={styles.title}>
+            {job.title}
+          </Text>
+
           <View style={styles.postedRow}>
-            <Text style={styles.contractor}>Publicado por {job.contractor}</Text>
-            <Text style={styles.postedAt}>{job.postedAt}</Text>
+            <Text style={styles.contractor}>
+              Publicado por {job.contractor}
+            </Text>
+
+            <Text style={styles.postedAt}>
+              {job.postedAt}
+            </Text>
           </View>
         </View>
 
         <View style={styles.mainContent}>
-          <View style={styles.imageFrame}>
-            <Image
-              accessibilityLabel={`Imagem da oportunidade: ${job.title}`}
-              source={{ uri: job.imageUrl }}
-              style={styles.image}
-            />
-          </View>
+          {!!job.imageUrl && (
+            <View style={styles.imageFrame}>
+              <Image
+                accessibilityLabel={`Imagem da oportunidade: ${job.title}`}
+                source={{ uri: job.imageUrl }}
+                style={styles.image}
+              />
+            </View>
+          )}
 
           <View style={styles.highlightCard}>
             <View style={styles.quoteNotice}>
-              <Text style={styles.highlightLabel}>MODALIDADE DE ATENDIMENTO</Text>
+              <Text style={styles.highlightLabel}>
+                MODALIDADE DE ATENDIMENTO
+              </Text>
+
               <Text style={styles.quoteText}>
-                O orçamento é definido após a visita técnica e avaliação do serviço no local.
+                O orçamento é definido após a avaliação do serviço no local.
               </Text>
             </View>
+
             <View style={styles.scheduleSection}>
-              <Text style={styles.highlightLabel}>HORÁRIO</Text>
-              <Text style={styles.schedule}>{job.schedule}</Text>
+              <Text style={styles.highlightLabel}>
+                HORÁRIO
+              </Text>
+
+              <Text style={styles.schedule}>
+                {job.schedule}
+              </Text>
             </View>
           </View>
 
           <JobDetailSection title="Descrição do serviço">
-            <Text style={styles.body}>{job.description}</Text>
+            <Text style={styles.body}>
+              {job.description}
+            </Text>
           </JobDetailSection>
 
-          <JobDetailSection title="Morada da visita">
-            <Text style={styles.location}>{job.location}</Text>
-            <Text style={styles.distance}>Distância aproximada: {job.distance}</Text>
-          </JobDetailSection>
+          <JobDetailSection title="Endereço do serviço">
+            <Text style={styles.location}>
+              {job.location}
+            </Text>
 
-          <JobDetailSection title="Dados do cliente">
-            <Text style={styles.subsectionTitle}>Contratante</Text>
-            <Text style={styles.location}>{job.contractor}</Text>
             <Text style={styles.distance}>
-              Combine os detalhes do atendimento com o cliente após a visita técnica.
+              Distância aproximada: {job.distance}
+            </Text>
+          </JobDetailSection>
+
+          <JobDetailSection title="Dados do contratante">
+            <Text style={styles.subsectionTitle}>
+              Contratante
+            </Text>
+
+            <Text style={styles.location}>
+              {job.contractor}
+            </Text>
+
+            <Text style={styles.distance}>
+              Aguarde o retorno do contratante após enviar sua candidatura.
             </Text>
           </JobDetailSection>
 
           <View style={styles.application}>
             <PrimaryButton
-              title="Combinar visita técnica"
-              onPress={() => setSuccessVisible(true)}
+              title={
+                sending
+                  ? 'Enviando candidatura...'
+                  : 'Candidatar-se à vaga'
+              }
+              onPress={handleApply}
+              disabled={sending}
             />
+
+            {sending && (
+              <ActivityIndicator
+                size="small"
+                color="#FF6410"
+                style={styles.loading}
+              />
+            )}
+
             <View style={styles.chatAction}>
               <PrimaryButton
                 title="Conversar por texto"
@@ -113,13 +221,6 @@ export function JobDetailsScreen({
         onJobsPress={onBack}
         onMyJobsPress={onOpenMyJobs}
         onProfilePress={onOpenProfile}
-      />
-      <VisitRequestModal
-        visible={successVisible}
-        jobTitle={job.title}
-        clientName={job.contractor}
-        location={job.location}
-        onClose={() => setSuccessVisible(false)}
       />
     </View>
   );
@@ -287,6 +388,9 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   chatAction: {
+    marginTop: 10,
+  },
+  loading: {
     marginTop: 10,
   },
   pressed: {

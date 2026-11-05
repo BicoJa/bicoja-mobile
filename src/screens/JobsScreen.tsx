@@ -11,6 +11,7 @@ type UserRole = 'trabalhador' | 'contratante';
 type JobsScreenProps = {
   role: UserRole;
   userName: string;
+  userId: number | null;
   onSelectJob: (job: Job) => void;
   onOpenMyJobs: () => void;
   onOpenProfile: () => void;
@@ -19,6 +20,7 @@ type JobsScreenProps = {
 export function JobsScreen({
   role,
   userName,
+  userId,
   onSelectJob,
   onOpenMyJobs,
   onOpenProfile,
@@ -32,7 +34,7 @@ export function JobsScreen({
     setError(null);
 
     try {
-      setJobs(await getJobs());
+      setJobs(await getJobs(userId, role));
     } catch (loadError) {
       setError(
         loadError instanceof Error
@@ -46,7 +48,7 @@ export function JobsScreen({
 
   useEffect(() => {
     void loadJobs();
-  }, []);
+  }, [userId, role]);
 
   return (
     <View style={styles.screen}>

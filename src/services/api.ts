@@ -91,6 +91,9 @@ async function requestJson<T>(
     }
   );
 
+  console.log('📥 RESPOSTA DO BACKEND:', response.status);
+
+
   if (!response.ok) {
     const mensagem = await response.text();
 
