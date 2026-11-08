@@ -3,6 +3,10 @@ import { useState } from 'react';
 import { Alert, StyleSheet } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { Job } from './src/types';
+import {
+  ChangePhoneScreen,
+  type ChangePhoneValues,
+} from './src/screens/ChangePhoneScreen';
 import { ChatScreen } from './src/screens/ChatScreen';
 import { ForgotPasswordScreen } from './src/screens/ForgotPasswordScreen';
 import { JobDetailsScreen } from './src/screens/JobDetailsScreen';
@@ -23,7 +27,8 @@ type Screen =
   | 'myJobs'
   | 'details'
   | 'chat'
-  | 'profile';
+  | 'profile'
+  | 'changePhone';
 
 export default function App() {
   const [screen, setScreen] = useState<Screen>('login');
@@ -141,6 +146,18 @@ export default function App() {
             onOpenJobs={() => setScreen('jobs')}
             onOpenMyJobs={() => setScreen('myJobs')}
             onSignOut={() => setScreen('login')}
+            onChangePhone={() => setScreen('changePhone')}
+          />
+        )}
+        {screen === 'changePhone' && (
+          <ChangePhoneScreen
+            onSave={(_values: ChangePhoneValues) => {
+              Alert.alert(
+                'Alteração indisponível',
+                'A atualização do telefone ainda não está conectada a um serviço de conta.',
+              );
+            }}
+            onCancel={() => setScreen('profile')}
           />
         )}
       </SafeAreaView>
