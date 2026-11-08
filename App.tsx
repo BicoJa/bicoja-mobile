@@ -2,12 +2,13 @@ import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
 import { Alert, StyleSheet } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import { Job } from './src/types';
+import type { Job } from './src/types';
 import {
   ChangePhoneScreen,
   type ChangePhoneValues,
 } from './src/screens/ChangePhoneScreen';
 import { ChatScreen } from './src/screens/ChatScreen';
+import { CreateJobScreen, type CreateJobValues } from './src/screens/CreateJobScreen';
 import { EditSkillsScreen } from './src/screens/EditSkillsScreen';
 import { ForgotPasswordScreen } from './src/screens/ForgotPasswordScreen';
 import { JobDetailsScreen } from './src/screens/JobDetailsScreen';
@@ -32,7 +33,8 @@ type Screen =
   | 'profile'
   | 'changePhone'
   | 'editSkills'
-  | 'notifications';
+  | 'notifications'
+  | 'createJob';
 
 export default function App() {
   const [screen, setScreen] = useState<Screen>('login');
@@ -116,6 +118,7 @@ export default function App() {
             onSelectJob={(job) => handleSelectJob(job, 'jobs')}
             onOpenMyJobs={() => setScreen('myJobs')}
             onOpenProfile={() => setScreen('profile')}
+            onCreateJob={() => setScreen('createJob')}
           />
         )}
         {screen === 'myJobs' && (
@@ -155,6 +158,7 @@ export default function App() {
             onChangePhone={() => setScreen('changePhone')}
             onEditSkills={() => setScreen('editSkills')}
             onOpenNotifications={() => setScreen('notifications')}
+            onCreateJob={() => setScreen('createJob')}
           />
         )}
         {screen === 'changePhone' && (
@@ -181,6 +185,18 @@ export default function App() {
         )}
         {screen === 'notifications' && (
           <NotificationsScreen onBack={() => setScreen('profile')} />
+        )}
+        {screen === 'createJob' && (
+          <CreateJobScreen
+            onPublish={(_values: CreateJobValues) => {
+              setScreen('jobs');
+              Alert.alert(
+                'Publicação indisponível',
+                'Os dados foram validados, mas a publicação ainda não está conectada a um serviço de vagas.',
+              );
+            }}
+            onCancel={() => setScreen('jobs')}
+          />
         )}
       </SafeAreaView>
     </SafeAreaProvider>

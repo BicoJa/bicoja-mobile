@@ -12,6 +12,7 @@ type ProfileScreenProps = {
   onChangePhone: () => void;
   onEditSkills: () => void;
   onOpenNotifications: () => void;
+  onCreateJob: () => void;
 };
 
 type ProfileAction = 'edit' | 'privacy' | 'terms' | null;
@@ -25,6 +26,7 @@ export function ProfileScreen({
   onChangePhone,
   onEditSkills,
   onOpenNotifications,
+  onCreateJob,
 }: ProfileScreenProps) {
   const [activeAction, setActiveAction] = useState<ProfileAction>(null);
   const isWorker = role === 'trabalhador';
@@ -87,6 +89,12 @@ export function ProfileScreen({
               label="Notificações"
               description="Acompanhe novidades sobre seus serviços"
               onPress={onOpenNotifications}
+            />
+            <View style={styles.divider} />
+            <SettingsAction
+              label="Publicar serviço"
+              description="Encontre profissionais para o seu serviço"
+              onPress={onCreateJob}
             />
             <View style={styles.divider} />
             <SettingsAction

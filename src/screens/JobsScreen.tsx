@@ -14,6 +14,7 @@ type JobsScreenProps = {
   onSelectJob: (job: Job) => void;
   onOpenMyJobs: () => void;
   onOpenProfile: () => void;
+  onCreateJob: () => void;
 };
 
 export function JobsScreen({
@@ -22,6 +23,7 @@ export function JobsScreen({
   onSelectJob,
   onOpenMyJobs,
   onOpenProfile,
+  onCreateJob,
 }: JobsScreenProps) {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
@@ -65,6 +67,16 @@ export function JobsScreen({
               : 'Pronto para encontrar profissionais para sua obra?'}
           </Text>
         </View>
+
+        {role === 'contratante' && (
+          <View style={styles.createJobAction}>
+            <PrimaryButton
+              title="Publicar um serviço"
+              onPress={onCreateJob}
+              backgroundColor="#FF6410"
+            />
+          </View>
+        )}
 
         <View style={styles.listArea}>
           <View style={styles.sectionHeading}>
@@ -173,6 +185,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#484848',
     paddingHorizontal: 16,
     paddingBottom: 12,
+  },
+  createJobAction: {
+    backgroundColor: '#484848',
+    paddingHorizontal: 16,
+    paddingTop: 12,
+    paddingBottom: 4,
   },
   sectionHeading: {
     flexDirection: 'row',
