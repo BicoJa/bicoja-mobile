@@ -9,11 +9,13 @@ import { JobsScreen } from './src/screens/JobsScreen';
 import { LoginScreen } from './src/screens/LoginScreen';
 import { MyJobsScreen } from './src/screens/MyJobsScreen';
 import { ProfileScreen } from './src/screens/ProfileScreen';
+import { RegisterFormValues, RegisterScreen } from './src/screens/RegisterScreen';
 import { RegistrationScreen } from './src/screens/RegistrationScreen';
 
 type UserRole = 'trabalhador' | 'contratante';
 type Screen =
   | 'login'
+  | 'register'
   | 'registration'
   | 'jobs'
   | 'myJobs'
@@ -33,8 +35,9 @@ export default function App() {
     setScreen('jobs');
   };
 
-  const handleSelectRole = (selectedRole: UserRole) => {
-    setRole(selectedRole);
+  const handleRegister = ({ fullName }: RegisterFormValues) => {
+    setUserName(fullName);
+    setRole('trabalhador');
     setScreen('registration');
   };
 
@@ -58,10 +61,13 @@ export default function App() {
           <LoginScreen
             onContinue={handleLogin}
             onForgotPassword={() => undefined}
-            onRegister={() => {
-              setRole('trabalhador');
-              setScreen('registration');
-            }}
+            onRegister={() => setScreen('register')}
+          />
+        )}
+        {screen === 'register' && (
+          <RegisterScreen
+            onRegister={handleRegister}
+            onLogin={() => setScreen('login')}
           />
         )}
         {screen === 'registration' && (
@@ -69,7 +75,9 @@ export default function App() {
             role={role}
             onBack={() => setScreen('login')}
             onContinue={(selectedServices) => {
-              setUserName(role === 'trabalhador' ? 'profissional' : 'cliente');
+              setUserName((currentName) =>
+                currentName || (role === 'trabalhador' ? 'profissional' : 'cliente'),
+              );
               if (role === 'trabalhador') {
                 setProfession(selectedServices.join(', '));
               }
