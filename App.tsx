@@ -29,6 +29,10 @@ export default function App() {
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
   const [detailsOrigin, setDetailsOrigin] = useState<'jobs' | 'myJobs'>('jobs');
 
+  const handleLogin = (_credentials: { email: string; password: string }) => {
+    setScreen('jobs');
+  };
+
   const handleSelectRole = (selectedRole: UserRole) => {
     setRole(selectedRole);
     setScreen('registration');
@@ -50,7 +54,16 @@ export default function App() {
     <SafeAreaProvider>
       <SafeAreaView style={styles.app}>
         <StatusBar style="dark" />
-        {screen === 'login' && <LoginScreen onContinue={handleSelectRole} />}
+        {screen === 'login' && (
+          <LoginScreen
+            onContinue={handleLogin}
+            onForgotPassword={() => undefined}
+            onRegister={() => {
+              setRole('trabalhador');
+              setScreen('registration');
+            }}
+          />
+        )}
         {screen === 'registration' && (
           <RegistrationScreen
             role={role}

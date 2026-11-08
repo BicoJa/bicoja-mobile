@@ -5,6 +5,7 @@ type PrimaryButtonProps = {
   onPress: () => void;
   variant?: 'primary' | 'secondary' | 'quiet';
   disabled?: boolean;
+  backgroundColor?: string;
 };
 
 export function PrimaryButton({
@@ -12,6 +13,7 @@ export function PrimaryButton({
   onPress,
   variant = 'primary',
   disabled = false,
+  backgroundColor,
 }: PrimaryButtonProps) {
   return (
     <Pressable
@@ -22,6 +24,7 @@ export function PrimaryButton({
       style={({ pressed }) => [
         styles.button,
         styles[variant],
+        backgroundColor && { backgroundColor },
         pressed && !disabled && styles.pressed,
         disabled && styles.disabled,
       ]}

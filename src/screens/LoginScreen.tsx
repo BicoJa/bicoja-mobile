@@ -1,180 +1,249 @@
-import { LinearGradient } from 'expo-linear-gradient';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useState } from 'react';
+import {
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
 import { BrandWordmark } from '../components/BrandWordmark';
+import { PrimaryButton } from '../components/PrimaryButton';
 
-type UserRole = 'trabalhador' | 'contratante';
-
-type LoginScreenProps = {
-  onContinue: (role: UserRole) => void;
+export type LoginCredentials = {
+  email: string;
+  password: string;
 };
 
-export function LoginScreen({ onContinue }: LoginScreenProps) {
+type LoginScreenProps = {
+  onContinue: (credentials: LoginCredentials) => void;
+  onForgotPassword?: () => void;
+  onRegister?: () => void;
+};
+
+export function LoginScreen({
+  onContinue,
+  onForgotPassword,
+  onRegister,
+}: LoginScreenProps) {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const isSubmitDisabled = !email.trim() || !password.trim();
+
+  const handleSubmit = () => {
+    if (isSubmitDisabled) {
+      return;
+    }
+
+    onContinue({
+      email: email.trim(),
+      password,
+    });
+  };
+
   return (
-    <LinearGradient
-      colors={['#FF4F00', '#FF7900', '#FFE956']}
-      locations={[0, 0.56, 1]}
-      start={{ x: 0.5, y: 0 }}
-      end={{ x: 0.5, y: 1 }}
-      style={styles.gradient}
-    >
-      <ScrollView
-        contentContainerStyle={styles.container}
-        showsVerticalScrollIndicator={false}
+    <View style={styles.screen}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        style={styles.keyboardAvoiding}
       >
-        <View style={styles.brand}>
-          <BrandWordmark />
-        </View>
+        <ScrollView
+          contentContainerStyle={styles.container}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.brandWrap}>
+            <BrandWordmark />
+          </View>
 
-        <View style={styles.intro}>
-          <Text style={styles.eyebrow}>
-            Conectando com quem faz com quem precisa.
-          </Text>
-          <Text style={styles.subtitle}>Como você quer usar o app?</Text>
-        </View>
+          <View style={styles.header}>
+            <Text style={styles.title}>Bem-vindo(a)</Text>
+            <Text style={styles.subtitle}>Entre para continuar</Text>
+          </View>
 
-        <View style={styles.profileOptions}>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Quero trabalhar"
-            onPress={() => onContinue('trabalhador')}
-            style={({ pressed }) => [styles.profileCard, pressed && styles.pressed]}
-          >
-            <View style={styles.profileIllustration}>
-              <Text style={styles.profileEmoji}>👷</Text>
+          <View style={styles.card}>
+            <View style={styles.fieldGroup}>
+              <Text style={styles.label}>E-mail ou telefone</Text>
+              <TextInput
+                accessibilityLabel="E-mail ou telefone"
+                autoCapitalize="none"
+                autoCorrect={false}
+                keyboardType="email-address"
+                onChangeText={setEmail}
+                placeholder="nome@email.com"
+                placeholderTextColor="#8A8A8A"
+                style={styles.input}
+                value={email}
+              />
             </View>
-            <View style={styles.profileCopy}>
-              <Text style={styles.profileTitle}>Quero TRABALHAR</Text>
-              <Text style={styles.profileDescription}>
-                Sou profissional da construção
-              </Text>
-            </View>
-            <Text accessibilityElementsHidden style={styles.arrow}>›</Text>
-          </Pressable>
 
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Quero contratar"
-            onPress={() => onContinue('contratante')}
-            style={({ pressed }) => [styles.profileCard, pressed && styles.pressed]}
-          >
-            <View style={[styles.profileIllustration, styles.contractorIllustration]}>
-              <Text style={styles.profileEmoji}>🏗️</Text>
+            <View style={styles.fieldGroup}>
+              <Text style={styles.label}>Palavra-passe</Text>
+              <TextInput
+                accessibilityLabel="Palavra-passe"
+                autoCapitalize="none"
+                autoCorrect={false}
+                onChangeText={setPassword}
+                placeholder="••••••••"
+                placeholderTextColor="#8A8A8A"
+                secureTextEntry
+                style={styles.input}
+                value={password}
+              />
             </View>
-            <View style={styles.profileCopy}>
-              <Text style={styles.profileTitle}>Quero CONTRATAR</Text>
-              <Text style={styles.profileDescription}>
-                Quero contratar um profissional
-              </Text>
-            </View>
-            <Text accessibilityElementsHidden style={styles.arrow}>›</Text>
-          </Pressable>
-        </View>
 
-        <Text style={styles.footer}>Conectando pessoas e oportunidades.</Text>
-      </ScrollView>
-    </LinearGradient>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="Recuperar palavra-passe"
+              onPress={onForgotPassword}
+              style={({ pressed }) => [styles.linkButton, pressed && styles.pressed]}
+            >
+              <Text style={styles.linkText}>Esqueceu a palavra-passe?</Text>
+            </Pressable>
+
+            <PrimaryButton
+              title="Entrar"
+              onPress={handleSubmit}
+              disabled={isSubmitDisabled}
+              backgroundColor="#FF6410"
+            />
+
+            <View style={styles.divider}>
+              <View style={styles.dividerLine} />
+              <Text style={styles.dividerText}>ou</Text>
+              <View style={styles.dividerLine} />
+            </View>
+
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="Criar conta"
+              onPress={onRegister}
+              style={({ pressed }) => [styles.registerButton, pressed && styles.pressed]}
+            >
+              <Text style={styles.registerText}>Ainda não tem conta? Registe-se</Text>
+            </Pressable>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  gradient: {
+  screen: {
+    flex: 1,
+    backgroundColor: '#FF5A00',
+  },
+  keyboardAvoiding: {
     flex: 1,
   },
   container: {
     flexGrow: 1,
     justifyContent: 'center',
     paddingHorizontal: 24,
-    paddingTop: 52,
-    paddingBottom: 24,
+    paddingTop: 32,
+    paddingBottom: 32,
   },
-  brand: {
+  brandWrap: {
     width: '100%',
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 18,
   },
-  intro: {
+  header: {
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 18,
   },
-  eyebrow: {
+  title: {
     color: '#FFFFFF',
-    textAlign: 'center',
-    fontSize: 15,
-    lineHeight: 20,
-    fontWeight: '700',
+    fontSize: 24,
+    lineHeight: 30,
+    fontWeight: '800',
   },
   subtitle: {
-    color: '#FFFFFF',
-    textAlign: 'center',
-    fontSize: 16,
-    lineHeight: 22,
-    fontWeight: '800',
-    marginTop: 12,
+    color: '#D9D9D9',
+    fontSize: 14,
+    lineHeight: 20,
+    fontWeight: '600',
+    marginTop: 6,
   },
-  profileOptions: {
-    gap: 12,
-  },
-  profileCard: {
-    minHeight: 108,
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderRadius: 20,
-    borderColor: '#FFFFFF',
+  card: {
     backgroundColor: '#FFFFFF',
-    padding: 10,
-    shadowColor: '#8F3300',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.16,
-    shadowRadius: 8,
-    elevation: 3,
+    borderRadius: 24,
+    paddingHorizontal: 18,
+    paddingTop: 20,
+    paddingBottom: 18,
+    shadowColor: '#1B1B1B',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.14,
+    shadowRadius: 15,
+    elevation: 4,
   },
-  profileIllustration: {
-    width: 68,
-    height: 72,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 16,
-    backgroundColor: '#FFF0D8',
+  fieldGroup: {
+    marginBottom: 16,
   },
-  contractorIllustration: {
-    backgroundColor: '#FFE3C2',
-  },
-  profileEmoji: {
-    fontSize: 38,
-  },
-  profileCopy: {
-    flex: 1,
-    marginLeft: 12,
-  },
-  profileTitle: {
-    color: '#E26B25',
-    fontSize: 16,
-    lineHeight: 21,
-    fontWeight: '800',
-  },
-  profileDescription: {
-    color: '#75503D',
+  label: {
+    color: '#26344B',
     fontSize: 12,
     lineHeight: 16,
-    fontWeight: '600',
-    marginTop: 4,
-  },
-  arrow: {
-    color: '#E9500A',
-    fontSize: 30,
-    lineHeight: 34,
     fontWeight: '700',
-    paddingHorizontal: 5,
+    marginBottom: 8,
   },
-  footer: {
-    color: '#FFF7E8',
-    fontSize: 12,
+  input: {
+    backgroundColor: '#F5F5F5',
+    borderWidth: 1,
+    borderColor: '#EAEAEA',
+    borderRadius: 14,
+    color: '#1D1D1D',
+    fontSize: 15,
     fontWeight: '600',
-    textAlign: 'center',
-    marginTop: 22,
+    minHeight: 52,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+  },
+  linkButton: {
+    alignSelf: 'flex-end',
+    marginTop: -4,
+    marginBottom: 20,
+  },
+  linkText: {
+    color: '#193C83',
+    fontSize: 12,
+    fontWeight: '700',
+  },
+  divider: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 18,
+  },
+  dividerLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: '#E5E5E5',
+  },
+  dividerText: {
+    color: '#6A6A6A',
+    fontSize: 12,
+    fontWeight: '700',
+    marginHorizontal: 12,
+  },
+  registerButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: 42,
+    borderRadius: 12,
+    backgroundColor: '#FFF5EE',
+    borderWidth: 1,
+    borderColor: '#FFD9C4',
+  },
+  registerText: {
+    color: '#FF6410',
+    fontSize: 14,
+    fontWeight: '700',
   },
   pressed: {
-    opacity: 0.86,
-    transform: [{ scale: 0.99 }],
+    opacity: 0.8,
   },
 });
