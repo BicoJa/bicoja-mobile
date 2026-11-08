@@ -1,9 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { Alert, StyleSheet } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { Job } from './src/types';
 import { ChatScreen } from './src/screens/ChatScreen';
+import { ForgotPasswordScreen } from './src/screens/ForgotPasswordScreen';
 import { JobDetailsScreen } from './src/screens/JobDetailsScreen';
 import { JobsScreen } from './src/screens/JobsScreen';
 import { LoginScreen } from './src/screens/LoginScreen';
@@ -16,6 +17,7 @@ type UserRole = 'trabalhador' | 'contratante';
 type Screen =
   | 'login'
   | 'register'
+  | 'forgotPassword'
   | 'registration'
   | 'jobs'
   | 'myJobs'
@@ -60,8 +62,19 @@ export default function App() {
         {screen === 'login' && (
           <LoginScreen
             onContinue={handleLogin}
-            onForgotPassword={() => undefined}
+            onForgotPassword={() => setScreen('forgotPassword')}
             onRegister={() => setScreen('register')}
+          />
+        )}
+        {screen === 'forgotPassword' && (
+          <ForgotPasswordScreen
+            onSendInstructions={() => {
+              Alert.alert(
+                'Recuperação indisponível',
+                'O envio das instruções ainda não está conectado a um serviço de autenticação.',
+              );
+            }}
+            onLogin={() => setScreen('login')}
           />
         )}
         {screen === 'register' && (
