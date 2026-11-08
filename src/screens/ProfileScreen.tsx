@@ -10,6 +10,7 @@ type ProfileScreenProps = {
   onOpenMyJobs: () => void;
   onSignOut: () => void;
   onChangePhone: () => void;
+  onEditSkills: () => void;
 };
 
 type ProfileAction = 'edit' | 'privacy' | 'terms' | null;
@@ -21,6 +22,7 @@ export function ProfileScreen({
   onOpenMyJobs,
   onSignOut,
   onChangePhone,
+  onEditSkills,
 }: ProfileScreenProps) {
   const [activeAction, setActiveAction] = useState<ProfileAction>(null);
   const isWorker = role === 'trabalhador';
@@ -62,6 +64,16 @@ export function ProfileScreen({
               description="Atualize os seus dados de perfil"
               onPress={() => setActiveAction('edit')}
             />
+            {isWorker && (
+              <>
+                <View style={styles.divider} />
+                <SettingsAction
+                  label="Alterar habilidades"
+                  description="Atualize os serviços que oferece"
+                  onPress={onEditSkills}
+                />
+              </>
+            )}
             <View style={styles.divider} />
             <SettingsAction
               label="Privacidade e segurança"

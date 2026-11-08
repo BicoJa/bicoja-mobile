@@ -8,6 +8,7 @@ import {
   type ChangePhoneValues,
 } from './src/screens/ChangePhoneScreen';
 import { ChatScreen } from './src/screens/ChatScreen';
+import { EditSkillsScreen } from './src/screens/EditSkillsScreen';
 import { ForgotPasswordScreen } from './src/screens/ForgotPasswordScreen';
 import { JobDetailsScreen } from './src/screens/JobDetailsScreen';
 import { JobsScreen } from './src/screens/JobsScreen';
@@ -28,13 +29,15 @@ type Screen =
   | 'details'
   | 'chat'
   | 'profile'
-  | 'changePhone';
+  | 'changePhone'
+  | 'editSkills';
 
 export default function App() {
   const [screen, setScreen] = useState<Screen>('login');
   const [role, setRole] = useState<UserRole>('trabalhador');
   const [userName, setUserName] = useState('');
   const [profession, setProfession] = useState('Profissional');
+  const [skills, setSkills] = useState<string[]>([]);
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
   const [detailsOrigin, setDetailsOrigin] = useState<'jobs' | 'myJobs'>('jobs');
 
@@ -97,6 +100,7 @@ export default function App() {
                 currentName || (role === 'trabalhador' ? 'profissional' : 'cliente'),
               );
               if (role === 'trabalhador') {
+                setSkills(selectedServices);
                 setProfession(selectedServices.join(', '));
               }
               setScreen('jobs');
@@ -147,6 +151,7 @@ export default function App() {
             onOpenMyJobs={() => setScreen('myJobs')}
             onSignOut={() => setScreen('login')}
             onChangePhone={() => setScreen('changePhone')}
+            onEditSkills={() => setScreen('editSkills')}
           />
         )}
         {screen === 'changePhone' && (
@@ -156,6 +161,17 @@ export default function App() {
                 'Alteração indisponível',
                 'A atualização do telefone ainda não está conectada a um serviço de conta.',
               );
+            }}
+            onCancel={() => setScreen('profile')}
+          />
+        )}
+        {screen === 'editSkills' && (
+          <EditSkillsScreen
+            skills={skills}
+            onSave={(updatedSkills) => {
+              setSkills(updatedSkills);
+              setProfession(updatedSkills.join(', '));
+              setScreen('profile');
             }}
             onCancel={() => setScreen('profile')}
           />
