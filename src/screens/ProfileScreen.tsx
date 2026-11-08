@@ -11,6 +11,7 @@ type ProfileScreenProps = {
   onSignOut: () => void;
   onChangePhone: () => void;
   onEditSkills: () => void;
+  onOpenNotifications: () => void;
 };
 
 type ProfileAction = 'edit' | 'privacy' | 'terms' | null;
@@ -23,6 +24,7 @@ export function ProfileScreen({
   onSignOut,
   onChangePhone,
   onEditSkills,
+  onOpenNotifications,
 }: ProfileScreenProps) {
   const [activeAction, setActiveAction] = useState<ProfileAction>(null);
   const isWorker = role === 'trabalhador';
@@ -79,6 +81,12 @@ export function ProfileScreen({
               label="Privacidade e segurança"
               description="Consulte as opções da sua conta"
               onPress={() => setActiveAction('privacy')}
+            />
+            <View style={styles.divider} />
+            <SettingsAction
+              label="Notificações"
+              description="Acompanhe novidades sobre seus serviços"
+              onPress={onOpenNotifications}
             />
             <View style={styles.divider} />
             <SettingsAction

@@ -14,6 +14,7 @@ import { JobDetailsScreen } from './src/screens/JobDetailsScreen';
 import { JobsScreen } from './src/screens/JobsScreen';
 import { LoginScreen } from './src/screens/LoginScreen';
 import { MyJobsScreen } from './src/screens/MyJobsScreen';
+import { NotificationsScreen } from './src/screens/NotificationsScreen';
 import { ProfileScreen } from './src/screens/ProfileScreen';
 import { RegisterFormValues, RegisterScreen } from './src/screens/RegisterScreen';
 import { RegistrationScreen } from './src/screens/RegistrationScreen';
@@ -30,7 +31,8 @@ type Screen =
   | 'chat'
   | 'profile'
   | 'changePhone'
-  | 'editSkills';
+  | 'editSkills'
+  | 'notifications';
 
 export default function App() {
   const [screen, setScreen] = useState<Screen>('login');
@@ -152,6 +154,7 @@ export default function App() {
             onSignOut={() => setScreen('login')}
             onChangePhone={() => setScreen('changePhone')}
             onEditSkills={() => setScreen('editSkills')}
+            onOpenNotifications={() => setScreen('notifications')}
           />
         )}
         {screen === 'changePhone' && (
@@ -175,6 +178,9 @@ export default function App() {
             }}
             onCancel={() => setScreen('profile')}
           />
+        )}
+        {screen === 'notifications' && (
+          <NotificationsScreen onBack={() => setScreen('profile')} />
         )}
       </SafeAreaView>
     </SafeAreaProvider>
