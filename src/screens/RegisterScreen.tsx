@@ -50,12 +50,12 @@ export function RegisterScreen({ onRegister, onLogin }: RegisterScreenProps) {
       errors.phone = 'Informe seu telefone ou WhatsApp.';
     }
     if (!password) {
-      errors.password = 'Informe uma palavra-passe.';
+      errors.password = 'Informe uma senha.';
     }
     if (!confirmPassword) {
-      errors.confirmPassword = 'Confirme sua palavra-passe.';
+      errors.confirmPassword = 'Confirme sua senha.';
     } else if (password !== confirmPassword) {
-      errors.confirmPassword = 'As palavras-passe não coincidem.';
+      errors.confirmPassword = 'As senhas não coincidem.';
     }
 
     return errors;
@@ -148,13 +148,13 @@ export function RegisterScreen({ onRegister, onLogin }: RegisterScreenProps) {
             </View>
 
             <View style={styles.fieldGroup}>
-              <Text style={styles.label}>Palavra-passe</Text>
+              <Text style={styles.label}>Senha</Text>
               <TextInput
-                accessibilityLabel="Palavra-passe"
+                accessibilityLabel="Senha"
                 autoCapitalize="none"
                 autoCorrect={false}
                 onChangeText={setPassword}
-                placeholder="Digite sua palavra-passe"
+                placeholder="Digite sua senha"
                 placeholderTextColor="#8A8A8A"
                 returnKeyType="next"
                 secureTextEntry
@@ -165,9 +165,9 @@ export function RegisterScreen({ onRegister, onLogin }: RegisterScreenProps) {
             </View>
 
             <View style={styles.fieldGroup}>
-              <Text style={styles.label}>Confirme a palavra-passe</Text>
+              <Text style={styles.label}>Confirme a senha</Text>
               <TextInput
-                accessibilityLabel="Confirme a palavra-passe"
+                accessibilityLabel="Confirme a senha"
                 autoCapitalize="none"
                 autoCorrect={false}
                 onChangeText={setConfirmPassword}
