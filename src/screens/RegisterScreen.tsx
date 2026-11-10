@@ -14,7 +14,7 @@ import { PrimaryButton } from '../components/PrimaryButton';
 
 export type RegisterFormValues = {
   fullName: string;
-  email: string;
+  cpf: string;
   phone: string;
   password: string;
 };
@@ -29,7 +29,7 @@ type FormErrors = Partial<Record<RegisterField, string>>;
 
 export function RegisterScreen({ onRegister, onLogin }: RegisterScreenProps) {
   const [fullName, setFullName] = useState('');
-  const [email, setEmail] = useState('');
+  const [cpf, setCpf] = useState('');
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -41,10 +41,10 @@ export function RegisterScreen({ onRegister, onLogin }: RegisterScreenProps) {
     if (!fullName.trim()) {
       errors.fullName = 'Informe seu nome completo.';
     }
-    if (!email.trim()) {
-      errors.email = 'Informe seu e-mail.';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
-      errors.email = 'Informe um e-mail válido.';
+    if (!cpf.trim()) {
+      errors.cpf = 'Informe seu CPF.';
+    } else if (cpf.replace(/\D/g, '').length !== 11) {
+      errors.cpf = 'Informe um CPF válido.';
     }
     if (!phone.trim()) {
       errors.phone = 'Informe seu telefone ou WhatsApp.';
@@ -72,7 +72,7 @@ export function RegisterScreen({ onRegister, onLogin }: RegisterScreenProps) {
 
     onRegister({
       fullName: fullName.trim(),
-      email: email.trim(),
+      cpf: cpf.trim(),
       phone: phone.trim(),
       password,
     });
@@ -118,20 +118,18 @@ export function RegisterScreen({ onRegister, onLogin }: RegisterScreenProps) {
             </View>
 
             <View style={styles.fieldGroup}>
-              <Text style={styles.label}>E-mail</Text>
+              <Text style={styles.label}>CPF</Text>
               <TextInput
-                accessibilityLabel="E-mail"
-                autoCapitalize="none"
-                autoCorrect={false}
-                keyboardType="email-address"
-                onChangeText={setEmail}
-                placeholder="nome@email.com"
+                accessibilityLabel="CPF"
+                keyboardType="numeric"
+                onChangeText={setCpf}
+                placeholder="000.000.000-00"
                 placeholderTextColor="#8A8A8A"
                 returnKeyType="next"
                 style={styles.input}
-                value={email}
+                value={cpf}
               />
-              {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
+              {errors.cpf && <Text style={styles.errorText}>{errors.cpf}</Text>}
             </View>
 
             <View style={styles.fieldGroup}>
