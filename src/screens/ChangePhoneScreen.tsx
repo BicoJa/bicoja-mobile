@@ -93,13 +93,13 @@ export function ChangePhoneScreen({ onSave, onCancel }: ChangePhoneScreenProps) 
 
           <View style={styles.card}>
             <View style={styles.fieldGroup}>
-              <Text style={styles.label}>Palavra-passe atual</Text>
+              <Text style={styles.label}>Senha atual</Text>
               <TextInput
-                accessibilityLabel="Palavra-passe atual"
+                accessibilityLabel="Senha atual"
                 autoCapitalize="none"
                 autoCorrect={false}
                 onChangeText={setCurrentPassword}
-                placeholder="Digite sua palavra-passe"
+                placeholder="Digite sua senha"
                 placeholderTextColor="#8A8A8A"
                 returnKeyType="next"
                 secureTextEntry
@@ -114,9 +114,9 @@ export function ChangePhoneScreen({ onSave, onCancel }: ChangePhoneScreenProps) 
             </View>
 
             <View style={styles.fieldGroup}>
-              <Text style={styles.label}>Novo telemóvel / WhatsApp</Text>
+              <Text style={styles.label}>Novo telefone / WhatsApp</Text>
               <TextInput
-                accessibilityLabel="Novo número de telemóvel ou WhatsApp"
+                accessibilityLabel="Novo telefone / WhatsApp"
                 keyboardType="phone-pad"
                 onChangeText={setNewPhone}
                 placeholder="(00) 00000-0000"
@@ -133,9 +133,9 @@ export function ChangePhoneScreen({ onSave, onCancel }: ChangePhoneScreenProps) 
             </View>
 
             <View style={styles.fieldGroup}>
-              <Text style={styles.label}>Confirme o novo telemóvel</Text>
+              <Text style={styles.label}>Confirme o novo telefone</Text>
               <TextInput
-                accessibilityLabel="Confirme o novo número de telemóvel"
+                accessibilityLabel="Confirme o novo telefone"
                 keyboardType="phone-pad"
                 onChangeText={setConfirmPhone}
                 onSubmitEditing={handleSubmit}
