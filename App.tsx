@@ -19,9 +19,11 @@ import { NotificationsScreen } from './src/screens/NotificationsScreen';
 import { ProfileScreen } from './src/screens/ProfileScreen';
 import { RegisterFormValues, RegisterScreen } from './src/screens/RegisterScreen';
 import { RegistrationScreen } from './src/screens/RegistrationScreen';
+import { RoleSelectionScreen } from './src/screens/RoleSelectionScreen';
 
 type UserRole = 'trabalhador' | 'contratante';
 type Screen =
+  | 'roleSelection'
   | 'login'
   | 'register'
   | 'forgotPassword'
@@ -46,7 +48,7 @@ export default function App() {
   const [detailsOrigin, setDetailsOrigin] = useState<'jobs' | 'myJobs'>('jobs');
 
   const handleLogin = (_credentials: { email: string; password: string }) => {
-    setScreen('jobs');
+    setScreen('roleSelection');
   };
 
   const handleRegister = ({ fullName }: RegisterFormValues) => {
@@ -71,6 +73,14 @@ export default function App() {
     <SafeAreaProvider>
       <SafeAreaView style={styles.app}>
         <StatusBar style="dark" />
+        {screen === 'roleSelection' && (
+          <RoleSelectionScreen
+            onSelectRole={(selectedRole) => {
+              setRole(selectedRole);
+              setScreen('registration');
+            }}
+          />
+        )}
         {screen === 'login' && (
           <LoginScreen
             onContinue={handleLogin}
@@ -98,7 +108,7 @@ export default function App() {
         {screen === 'registration' && (
           <RegistrationScreen
             role={role}
-            onBack={() => setScreen('login')}
+            onBack={() => setScreen('roleSelection')}
             onContinue={(selectedServices) => {
               setUserName((currentName) =>
                 currentName || (role === 'trabalhador' ? 'profissional' : 'cliente'),

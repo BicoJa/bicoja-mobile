@@ -4,8 +4,8 @@
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL?.trim();
 
-if (!API_URL) {
-  throw new Error('Configure EXPO_PUBLIC_API_URL no arquivo .env');
+export function isApiConfigured(): boolean {
+  return Boolean(API_URL);
 }
 
 
@@ -76,9 +76,12 @@ async function requestJson<T>(
   path: string,
   init?: RequestInit
 ): Promise<T> {
+  if (!API_URL) {
+    throw new Error('Configure EXPO_PUBLIC_API_URL no arquivo .env');
+  }
 
   const response = await fetch(
-    `${API_URL}${path}`,
+    `${API_URL.replace(/\/+$/, '')}${path}`,
     {
       ...init,
       headers: {
@@ -119,6 +122,10 @@ async function requestJson<T>(
 // ============================================
 // VAGAS
 // ============================================
+
+export function getJobsFromApi(): Promise<unknown> {
+  return requestJson<unknown>('/vaga');
+}
 
 // Criar vaga
 export function criarVaga(
