@@ -44,6 +44,16 @@ export function LoginScreen({
     });
   };
 
+  const handleCpfChange = (value: string) => {
+    const digits = value.replace(/\D/g, '').slice(0, 11);
+    const formattedCpf = digits
+      .replace(/^(\d{3})(\d)/, '$1.$2')
+      .replace(/^(\d{3})\.(\d{3})(\d)/, '$1.$2.$3')
+      .replace(/\.(\d{3})(\d)/, '.$1-$2');
+
+    setEmail(formattedCpf);
+  };
+
   return (
     <View style={styles.screen}>
       <KeyboardAvoidingView
@@ -66,14 +76,15 @@ export function LoginScreen({
 
           <View style={styles.card}>
             <View style={styles.fieldGroup}>
-              <Text style={styles.label}>E-mail ou telefone</Text>
+              <Text style={styles.label}>CPF</Text>
               <TextInput
-                accessibilityLabel="E-mail ou telefone"
+                accessibilityLabel="CPF"
                 autoCapitalize="none"
                 autoCorrect={false}
-                keyboardType="email-address"
-                onChangeText={setEmail}
-                placeholder="nome@email.com"
+                keyboardType="number-pad"
+                maxLength={14}
+                onChangeText={handleCpfChange}
+                placeholder="000.000.000-00"
                 placeholderTextColor="#8A8A8A"
                 style={styles.input}
                 value={email}
@@ -81,9 +92,9 @@ export function LoginScreen({
             </View>
 
             <View style={styles.fieldGroup}>
-              <Text style={styles.label}>Palavra-passe</Text>
+              <Text style={styles.label}>Senha</Text>
               <TextInput
-                accessibilityLabel="Palavra-passe"
+                accessibilityLabel="Senha"
                 autoCapitalize="none"
                 autoCorrect={false}
                 onChangeText={setPassword}
@@ -97,11 +108,11 @@ export function LoginScreen({
 
             <Pressable
               accessibilityRole="button"
-              accessibilityLabel="Recuperar palavra-passe"
+              accessibilityLabel="Esqueceu a senha?"
               onPress={onForgotPassword}
               style={({ pressed }) => [styles.linkButton, pressed && styles.pressed]}
             >
-              <Text style={styles.linkText}>Esqueceu a palavra-passe?</Text>
+              <Text style={styles.linkText}>Esqueceu a senha?</Text>
             </Pressable>
 
             <PrimaryButton
