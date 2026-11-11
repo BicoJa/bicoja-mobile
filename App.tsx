@@ -168,7 +168,6 @@ export default function App() {
             onChangePhone={() => setScreen('changePhone')}
             onEditSkills={() => setScreen('editSkills')}
             onOpenNotifications={() => setScreen('notifications')}
-            onCreateJob={() => setScreen('createJob')}
           />
         )}
         {screen === 'changePhone' && (

@@ -71,7 +71,7 @@ export function JobsScreen({
         {role === 'contratante' && (
           <View style={styles.createJobAction}>
             <PrimaryButton
-              title="Publicar um serviço"
+              title="Publicar serviço"
               onPress={onCreateJob}
               backgroundColor="#FF6410"
             />
