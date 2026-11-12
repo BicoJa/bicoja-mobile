@@ -1,4 +1,4 @@
-import { Job, JobCategory } from '../types';
+import { Job, JobCategory, Endereco } from '../types';
 import { getJobsFromApi, isApiConfigured } from './api';
 
 const DEMO_JOBS: Job[] = [
@@ -7,7 +7,14 @@ const DEMO_JOBS: Job[] = [
     title: 'Pedreiro',
     category: 'Pedreiro',
     contractor: 'Construtora Horizonte',
-    location: 'Manaíra, João Pessoa - PB',
+    endereco: {
+      cep: '58038-000',
+      logradouro: 'Av. Epitácio Pessoa',
+      numero: '1500',
+      bairro: 'Manaíra',
+      cidade: 'João Pessoa',
+      uf: 'PB',
+    },
     distance: '1,2 km de você',
     schedule: 'Seg a sex, das 7h às 17h',
     description:
@@ -23,7 +30,15 @@ const DEMO_JOBS: Job[] = [
     title: 'Encanador',
     category: 'Encanador',
     contractor: 'Marcos Construções',
-    location: 'Tambaú, João Pessoa - PB',
+    endereco: {
+      cep: '58039-000',
+      logradouro: 'Av. Beira Rio',
+      numero: '200',
+      complemento: 'Loja 3',
+      bairro: 'Tambaú',
+      cidade: 'João Pessoa',
+      uf: 'PB',
+    },
     distance: '2,3 km de você',
     schedule: 'Seg a sex, das 8h às 17h',
     description:
@@ -40,7 +55,14 @@ const DEMO_JOBS: Job[] = [
     title: 'Eletricista',
     category: 'Eletricista',
     contractor: 'Equipe Nova Casa',
-    location: 'Bancários, João Pessoa - PB',
+    endereco: {
+      cep: '58051-900',
+      logradouro: 'Rua Principal dos Bancários',
+      numero: '88',
+      bairro: 'Bancários',
+      cidade: 'João Pessoa',
+      uf: 'PB',
+    },
     distance: '1,9 km de você',
     schedule: 'Seg a sex, horário comercial',
     description:
@@ -62,6 +84,22 @@ const isJobCategory = (value: unknown): value is JobCategory =>
   value === 'Gesseiro' ||
   value === 'Pintor';
 
+const isEndereco = (value: unknown): value is Endereco => {
+  if (!value || typeof value !== 'object') {
+    return false;
+  }
+  const end = value as Record<string, unknown>;
+  return (
+    typeof end.cep === 'string' &&
+    typeof end.logradouro === 'string' &&
+    typeof end.numero === 'string' &&
+    (end.complemento === undefined || typeof end.complemento === 'string') &&
+    typeof end.bairro === 'string' &&
+    typeof end.cidade === 'string' &&
+    typeof end.uf === 'string'
+  );
+};
+
 const isJob = (value: unknown): value is Job => {
   if (!value || typeof value !== 'object') {
     return false;
@@ -73,7 +111,7 @@ const isJob = (value: unknown): value is Job => {
     typeof job.title === 'string' &&
     isJobCategory(job.category) &&
     typeof job.contractor === 'string' &&
-    typeof job.location === 'string' &&
+    isEndereco(job.endereco) &&
     typeof job.distance === 'string' &&
     typeof job.schedule === 'string' &&
     typeof job.description === 'string' &&
