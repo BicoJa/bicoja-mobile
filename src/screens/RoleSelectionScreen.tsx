@@ -1,5 +1,4 @@
-import { LinearGradient } from 'expo-linear-gradient';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { BrandWordmark } from '../components/BrandWordmark';
 
 type RoleSelectionScreenProps = {
@@ -9,13 +8,13 @@ type RoleSelectionScreenProps = {
 const ROLES = [
   {
     role: 'trabalhador',
-    icon: '👷',
+    image: require('../../assets/role-selection/worker.png'),
     title: 'Quero TRABALHAR',
     description: 'Sou profissional da construção',
   },
   {
     role: 'contratante',
-    icon: '🏗️',
+    image: require('../../assets/role-selection/contractor.png'),
     title: 'Quero CONTRATAR',
     description: 'Quero contratar um profissional',
   },
@@ -23,13 +22,7 @@ const ROLES = [
 
 export function RoleSelectionScreen({ onSelectRole }: RoleSelectionScreenProps) {
   return (
-    <LinearGradient
-      colors={['#FF4F00', '#FF7900', '#FFE956']}
-      locations={[0, 0.56, 1]}
-      start={{ x: 0.5, y: 0 }}
-      end={{ x: 0.5, y: 1 }}
-      style={styles.gradient}
-    >
+    <View style={styles.screen}>
       <ScrollView
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
@@ -47,7 +40,7 @@ export function RoleSelectionScreen({ onSelectRole }: RoleSelectionScreenProps) 
         </Text>
 
         <View style={styles.options}>
-          {ROLES.map(({ role, icon, title, description }) => (
+          {ROLES.map(({ role, image, title, description }) => (
             <Pressable
               key={role}
               accessibilityRole="button"
@@ -59,7 +52,13 @@ export function RoleSelectionScreen({ onSelectRole }: RoleSelectionScreenProps) 
               ]}
             >
               <View style={styles.iconBox}>
-                <Text style={styles.icon}>{icon}</Text>
+                <Image
+                  accessibilityIgnoresInvertColors
+                  accessible={false}
+                  resizeMode="contain"
+                  source={image}
+                  style={styles.roleImage}
+                />
               </View>
               <View style={styles.optionCopy}>
                 <Text style={styles.optionTitle}>{title}</Text>
@@ -76,13 +75,14 @@ export function RoleSelectionScreen({ onSelectRole }: RoleSelectionScreenProps) 
           Conectando pessoas e oportunidades.
         </Text>
       </ScrollView>
-    </LinearGradient>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  gradient: {
+  screen: {
     flex: 1,
+    backgroundColor: '#FF5A00',
   },
   content: {
     flexGrow: 1,
@@ -112,54 +112,59 @@ const styles = StyleSheet.create({
     marginBottom: 26,
   },
   options: {
-    gap: 20,
+    gap: 16,
   },
   option: {
     minHeight: 136,
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
-    borderRadius: 28,
-    padding: 18,
-    shadowColor: '#74320F',
-    shadowOffset: { width: 0, height: 7 },
-    shadowOpacity: 0.17,
-    shadowRadius: 12,
-    elevation: 5,
+    borderRadius: 20,
+    padding: 16,
+    shadowColor: '#5C2200',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.18,
+    shadowRadius: 10,
+    elevation: 6,
   },
   optionPressed: {
-    opacity: 0.86,
+    transform: [{ scale: 0.98 }],
   },
   iconBox: {
-    width: 82,
-    height: 82,
+    width: 72,
+    height: 72,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 24,
-    backgroundColor: '#FFF0D2',
-    marginRight: 18,
+    borderRadius: 18,
+    backgroundColor: '#FFFFFF',
+    marginRight: 14,
   },
-  icon: {
-    fontSize: 42,
+  roleImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 18,
   },
   optionCopy: {
     flex: 1,
-    gap: 8,
+    alignItems: 'center',
+    gap: 6,
   },
   optionTitle: {
-    color: '#C66B3B',
-    fontSize: 18,
-    lineHeight: 24,
+    color: '#26344B',
+    fontSize: 17,
+    lineHeight: 23,
     fontWeight: '900',
+    textAlign: 'center',
   },
   optionDescription: {
-    color: '#75594A',
+    color: '#5E5E5E',
     fontSize: 14,
     lineHeight: 20,
     fontWeight: '600',
+    textAlign: 'center',
   },
   chevron: {
-    color: '#CF5A19',
+    color: '#B8460A',
     fontSize: 34,
     lineHeight: 38,
     fontWeight: '800',
