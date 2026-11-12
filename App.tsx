@@ -47,8 +47,30 @@ export default function App() {
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
   const [detailsOrigin, setDetailsOrigin] = useState<'jobs' | 'myJobs'>('jobs');
 
-  const handleLogin = (_credentials: { email: string; password: string }) => {
-    setScreen('roleSelection');
+  const handleLogin = async (credentials: { email: string; password: string }) => {
+    try {
+      const apiUrl = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:8080';
+      console.log('A enviar requisição de login para:', `${apiUrl}/api/auth/login`);
+
+      const response = await fetch(`${apiUrl}/api/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(credentials),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Login com sucesso:', data);
+        setScreen('roleSelection');
+      } else {
+        Alert.alert('Erro', 'Credenciais inválidas.');
+      }
+    } catch (error) {
+      console.error('Erro de rede ao tentar fazer login:', error);
+      Alert.alert('Erro de Rede', 'Não foi possível ligar ao servidor backend.');
+    }
   };
 
   const handleRegister = ({ fullName }: RegisterFormValues) => {
